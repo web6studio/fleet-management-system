@@ -1,0 +1,121 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version: '1.25'
+          cache-dependency-path: backend/go.sum
+
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        with:
+          version: 10
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: '22'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+
+      # the same scripts a developer runs locally
+      - run: pnpm run lint
+      - run: pnpm run types
+      # -race needs cgo, which ubuntu has and a bare Windows box does not. CI is the
+      # place that always runs it.
+      - run: pnpm run test:go:race
+      - run: pnpm run test:web
+
+      - run: pnpm run build
+
+      # The end-to-end suite drives the artifact the build just produced, not a dev server.
+      - run: pnpm exec playwright install --with-deps chromium
+        working-directory: e2e
+      - run: pnpm run test:e2e
+
+      - if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: playwright-traces
+          path: e2e/.results/
+          retention-days: 7
+
+  rules:
+    # the two rules a linter cannot express
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: colour lives only in tokens.css
+        run: |
+          # the trailing class rules out JavaScript private fields such as #facilityStops
+          if grep -rInE "#[0-9a-fA-F]{3,8}([^0-9a-zA-Z_]|$)" frontend/src --include='*.ts' --include='*.tsx' --include='*.css' | grep -v 'src/styles/tokens.css'; then
+            echo '::error::raw hex outside frontend/src/styles/tokens.css - use a token'
+            exit 1
+          fi
+
+      - name: features do not import each other
+        run: |
+          if grep -rInE 'from "\.\./(header|fleet|map|inspector|alerts)/' frontend/src/features; then
+            echo '::error::cross-feature import - move the shared part to components, domain or lib'
+            exit 1
+          fi
+
+      - name: every documented route exists, and every route is documented
+        run: |
+          # The contract is the only place both ends agree. A route that drifts out of it is
+          # a change nobody reviewing the API can see.
+          python3 - <<'EOF'
+          import re, sys, yaml
+          spec = yaml.safe_load(open("docs/api/openapi.yaml", encoding="utf-8"))
+          documented = {
+              (method.upper(), "/api/v1" + path)
+              for path, ops in spec["paths"].items()
+              for method in ops
+          }
+          source = open("backend/internal/api/api.go", encoding="utf-8").read()
+          served = {
+              (m.group(1), m.group(2))
+              for m in re.finditer(r'HandleFunc\("(\w+) ([^"]+)"', source)
+          }
+          # The stream is a WebSocket; OpenAPI cannot describe it, so websocket.md does.
+          served.discard(("GET", "/api/v1/stream"))
+          if documented != served:
+              print("::error::openapi.yaml and the router disagree")
+              print("  only in the spec: ", sorted(documented - served))
+              print("  only in the code: ", sorted(served - documented))
+              sys.exit(1)
+          print(f"{len(served)} routes match the contract")
+          EOF
+
+  vulns:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version: '1.25'
+          cache-dependency-path: backend/go.sum
+      - run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - run: govulncheck ./...
+        working-directory: backend

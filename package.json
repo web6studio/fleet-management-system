@@ -1,0 +1,28 @@
+{
+  "name": "fleet-management-system",
+  "private": true,
+  "packageManager": "pnpm@12.18.0",
+  "description": "Task entry points. The single source of truth for every command, so the project needs neither GNU make nor a POSIX shell - both absent from a default Windows box. CI runs these same scripts.",
+  "scripts": {
+    "dev": "pnpm run --parallel \"/^dev:/\"",
+    "dev:api": "cd backend && go run ./cmd/server",
+    "dev:web": "cd frontend && pnpm dev",
+    "check": "pnpm run lint && pnpm run types && pnpm run test",
+    "lint": "pnpm run lint:go && pnpm run lint:web",
+    "lint:go": "cd backend && go vet ./...",
+    "lint:web": "cd frontend && pnpm exec biome check .",
+    "fmt": "cd frontend && pnpm exec biome check --write . && cd ../backend && go fmt ./...",
+    "types": "cd frontend && pnpm exec tsc --noEmit",
+    "test": "pnpm run test:go && pnpm run test:web",
+    "test:go": "cd backend && go test ./...",
+    "test:go:race": "cd backend && go test -race ./...",
+    "test:web": "cd frontend && pnpm exec vitest run",
+    "build": "pnpm run build:web && pnpm run build:console && pnpm run build:server",
+    "build:web": "cd frontend && pnpm build",
+    "build:console": "node scripts/stage-console.mjs",
+    "build:server": "cd backend && go build -trimpath -ldflags \"-s -w\" -o ../bin/ ./cmd/server",
+    "start": "node scripts/run-built-server.mjs",
+    "test:e2e": "cd e2e && pnpm exec playwright test",
+    "test:e2e:install": "cd e2e && pnpm exec playwright install --with-deps chromium"
+  }
+}

@@ -1,0 +1,16 @@
+# Two packages, one lockfile: the web UI and the end-to-end suite that drives the shipped
+# binary. The suite is its own package because it belongs to neither half — it starts the Go
+# server and talks to it through a browser.
+packages:
+  - frontend
+  - e2e
+
+# Postinstall scripts are blocked by default and that is the posture we want: a postinstall
+# is arbitrary code execution at install time, and it is the main supply-chain vector.
+#
+# esbuild (vite's bundler) is the only package here that asks for one. Its script verifies a
+# platform binary that pnpm already installs as an optional dependency, and `vite build`
+# succeeds without it - verified, not assumed. So the answer is a recorded "no" rather than
+# a convenient "yes".
+allowBuilds:
+  esbuild: false

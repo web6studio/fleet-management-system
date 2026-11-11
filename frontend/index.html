@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <meta
+      name="description"
+      content="Real-time supervision of an autonomous robot fleet across multi-storey indoor facilities."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
+    />
+    <title>Fleet Management System</title>
+  </head>
+  <body>
+    <script>
+      // Paint the stored theme before first render. React applies it in an effect, which is
+      // a frame too late: a stored light theme would flash the dark default first.
+      try {
+        // Key duplicated from src/app/theme.ts; this runs before any module loads.
+        var choice = localStorage.getItem("fms.theme") || "dark";
+        document.documentElement.dataset.theme =
+          choice === "system"
+            ? matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : choice;
+      } catch (e) {}
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
