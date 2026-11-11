@@ -1,0 +1,409 @@
+openapi: 3.1.0
+
+info:
+  title: Fleet Management System API
+  version: 1.0.0
+  description: |
+    Supervision of a service-robot fleet across multi-storey indoor facilities.
+
+    Two channels, split by what the traffic is rather than by what the transport can do:
+
+    - **HTTP**, described here: configuration that rarely changes, the bootstrap snapshot,
+      and commands. A command is a request with an answer — it wants a status code, an
+      idempotency key, an audit record and a rate limit, all of which HTTP and every gateway
+      in front of it already provide.
+    - **WebSocket** `/api/v1/stream`, described in `websocket.md`: everything that changes on
+      its own. Documented separately because OpenAPI cannot express a stream.
+
+    Commands are **accepted, not applied**. `202` means the instruction was queued for the
+    unit; the unit's next telemetry frame is what confirms it actually happened.
+
+servers:
+  - url: /api/v1
+
+paths:
+  /healthz:
+    get:
+      summary: Liveness probe
+      operationId: health
+      responses:
+        "200":
+          description: The server is up.
+          content:
+            text/plain:
+              schema: { type: string, example: ok }
+
+  /sites:
+    get:
+      summary: Facilities and their floor plans
+      operationId: listSites
+      description: |
+        Static configuration: the buildings, their storeys and the geometry of each plan.
+        Served separately from the fleet because it never changes between deployments, and
+        re-sending it on every reconnection would be the largest part of the payload.
+      responses:
+        "200":
+          description: Every facility the caller may see.
+          headers:
+            Cache-Control:
+              schema: { type: string, example: "public, max-age=300" }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [sites]
+                properties:
+                  sites:
+                    type: array
+                    items: { $ref: "#/components/schemas/Site" }
+
+  /fleet:
+    get:
+      summary: The current state of every unit
+      operationId: getFleet
+      description: |
+        The bootstrap snapshot. A client fetches this once, then follows the stream; it is
+        fetched again only when the stream reports a version gap it cannot close.
+      responses:
+        "200":
+          description: One consistent view of the fleet.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FleetSnapshot" }
+
+  /units/{unitId}/commands:
+    post:
+      summary: Send one command to one unit
+      operationId: sendUnitCommand
+      parameters:
+        - $ref: "#/components/parameters/UnitId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [command]
+              properties:
+                command:
+                  type: string
+                  enum: [stop, resume, start, dock]
+      responses:
+        "202":
+          description: Queued for delivery. The unit's next frame confirms it.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Accepted" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          description: No such unit.
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problem" }
+        "409":
+          description: |
+            The command cannot be carried out in the unit's current state — resuming a unit
+            that is not stopped, docking one already at a dock. The reason is in `detail`.
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problem" }
+
+  /sites/{siteId}/emergency-stop:
+    put:
+      summary: Engage or release the facility-wide emergency stop
+      operationId: setEmergencyStop
+      description: |
+        Scoped to one facility, every floor, regardless of what the caller is viewing.
+
+        `PUT` rather than `POST`: the body states the desired state rather than an action, so
+        repeating the call is harmless — which matters for the one request on this API that
+        a user may send twice under stress.
+
+        A supervisory stop over the network. It is not a certified E-stop and it clears no
+        fault.
+      parameters:
+        - $ref: "#/components/parameters/SiteId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [engaged]
+              properties:
+                engaged: { type: boolean }
+      responses:
+        "202":
+          description: Accepted. Held units report it on their next frame.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Accepted" }
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          description: No such facility.
+          content:
+            application/problem+json:
+              schema: { $ref: "#/components/schemas/Problem" }
+
+  /alarms/acknowledge:
+    post:
+      summary: Take ownership of one or more alarms
+      operationId: acknowledgeAlarms
+      description: |
+        Acknowledging records that an operator owns the alarm. It clears nothing: the
+        condition stays true and the unit still needs attention.
+
+        Ownership is first-writer-wins — an alarm somebody already owns is left alone, so a
+        late click cannot erase who actually took it. The response says how many changed.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [seqs]
+              properties:
+                seqs:
+                  type: array
+                  minItems: 1
+                  items: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: Applied.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [acknowledged]
+                properties:
+                  acknowledged:
+                    type: integer
+                    description: How many alarms changed owner. Zero is a normal answer.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+components:
+  parameters:
+    UnitId:
+      name: unitId
+      in: path
+      required: true
+      schema: { type: string, example: PUD-101 }
+    SiteId:
+      name: siteId
+      in: path
+      required: true
+      schema: { type: string, example: hotel }
+
+  responses:
+    BadRequest:
+      description: The body could not be understood.
+      content:
+        application/problem+json:
+          schema: { $ref: "#/components/schemas/Problem" }
+
+  schemas:
+    Problem:
+      description: RFC 9457 problem details.
+      type: object
+      required: [title, status]
+      properties:
+        title: { type: string }
+        status: { type: integer }
+        detail:
+          type: string
+          description: Phrased for an operator, because it is shown to one.
+
+    Accepted:
+      type: object
+      required: [accepted]
+      properties:
+        accepted: { type: boolean, const: true }
+
+    Point:
+      type: object
+      required: [x, y]
+      properties:
+        x: { type: number }
+        y: { type: number }
+
+    Pose:
+      description: Plan coordinates, heading in radians counter-clockwise from +x.
+      allOf:
+        - $ref: "#/components/schemas/Point"
+        - type: object
+          required: [heading]
+          properties:
+            heading: { type: number }
+
+    Site:
+      type: object
+      required: [id, name, floors, plans]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        floors:
+          type: array
+          description: Highest storey first — the order a building is read in.
+          items: { type: string }
+        plans:
+          type: object
+          description: >
+            One plan per storey, keyed by the floor ids in `floors`. Storeys of one
+            building differ, so a client must draw the plan for the floor it is showing
+            rather than a single plan for the facility.
+          additionalProperties: { $ref: "#/components/schemas/FloorPlan" }
+
+    FloorPlan:
+      type: object
+      required: [width, height, unitsPerMetre, rects, paths, labels]
+      properties:
+        width: { type: number }
+        height: { type: number }
+        unitsPerMetre:
+          type: number
+          description: Plan units per metre. 1000 × 800 units is a 50 × 40 m floor.
+        rects:
+          type: array
+          items:
+            type: object
+            required: [kind, x, y, w, h]
+            properties:
+              kind:
+                type: string
+                enum: [slab, room, corridor, door, bay, wall, fixture]
+              x: { type: number }
+              y: { type: number }
+              w: { type: number }
+              h: { type: number }
+              rx: { type: number }
+        paths:
+          type: array
+          description: SVG path data for stroked details — lift shafts, service rooms.
+          items: { type: string }
+        labels:
+          type: array
+          items:
+            type: object
+            required: [text, x, y]
+            properties:
+              text: { type: string }
+              x: { type: number }
+              y: { type: number }
+
+    Subsystems:
+      description: |
+        A missing key means the vendor publishes nothing about that subsystem. That is a
+        capability gap, never a fault, and the two must stay distinguishable.
+      type: object
+      properties:
+        lidar: { $ref: "#/components/schemas/Health" }
+        bumper: { $ref: "#/components/schemas/Health" }
+        drive: { $ref: "#/components/schemas/Health" }
+        payload: { $ref: "#/components/schemas/Health" }
+
+    Health:
+      type: string
+      enum: [ok, fault]
+
+    Unit:
+      type: object
+      required:
+        [id, name, series, siteId, floor, zone, pose, trail, state, task, taskProgress,
+         elapsed, battery, voltage, speed, subsystems]
+      properties:
+        id: { type: string, example: PUD-101 }
+        name: { type: string, example: Room Service 1 }
+        series: { type: string, example: Delivery AMR }
+        siteId: { type: string }
+        floor:
+          type: [string, "null"]
+          description: Null when the vendor publishes no pose; such a unit can never be mapped.
+        zone: { type: string }
+        pose:
+          oneOf:
+            - $ref: "#/components/schemas/Pose"
+            - type: "null"
+        trail:
+          type: array
+          description: Recent path in plan coordinates, oldest first.
+          items: { $ref: "#/components/schemas/Point" }
+        state:
+          type: string
+          description: |
+            What the vendor reports. `stopped` and `estop` are never reported — they are
+            things an operator did, and the client folds them in.
+          enum: [active, idle, charging, error, offline]
+        activity:
+          type: string
+          description: Present-tense verb for an active unit.
+          example: Navigating
+        task: { type: [string, "null"] }
+        taskProgress: { type: [number, "null"], minimum: 0, maximum: 1 }
+        elapsed: { type: string, example: 4m 12s }
+        eta: { type: string, example: "≈ 2 min left" }
+        nextTask: { type: string }
+        battery: { type: number, minimum: 0, maximum: 100 }
+        voltage: { type: number }
+        speed: { type: number, description: Metres per second. }
+        localization:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: SLAM confidence. Absent for vendors that do not publish it.
+        errorCode: { type: string, example: E42 }
+        silentFor: { type: integer, description: Seconds since the last frame. }
+        subsystems: { $ref: "#/components/schemas/Subsystems" }
+
+    Alarm:
+      type: object
+      required: [seq, siteId, time, severity, kind, unitId, detail, acknowledgedBy]
+      properties:
+        seq: { type: integer, format: int64 }
+        siteId: { type: string }
+        time: { type: string, example: "14:22:07" }
+        severity:
+          type: integer
+          enum: [1, 2, 3]
+        kind: { type: string, example: Not moving }
+        unitId:
+          type: [string, "null"]
+          description: Null for facility-wide alarms — the point of those is that they are one fault, not N.
+        detail: { type: string }
+        acknowledgedBy:
+          type: [string, "null"]
+          description: Server state. An alarm owned on one screen is owned on every screen.
+
+    FacilityStop:
+      type: object
+      required: [siteId, since]
+      properties:
+        siteId: { type: string }
+        since: { type: integer, format: int64, description: Unix milliseconds. }
+
+    FleetSnapshot:
+      type: object
+      required: [version, serverTime, units, alarms, facilityStops, unitStops]
+      properties:
+        version:
+          type: integer
+          format: int64
+          description: |
+            Monotonic, incremented once per published change. The stream carries the same
+            counter, so a client can tell it missed a frame and ask for a fresh snapshot.
+        serverTime: { type: integer, format: int64, description: Unix milliseconds. }
+        units:
+          type: array
+          items: { $ref: "#/components/schemas/Unit" }
+        alarms:
+          type: array
+          items: { $ref: "#/components/schemas/Alarm" }
+        facilityStops:
+          type: array
+          items: { $ref: "#/components/schemas/FacilityStop" }
+        unitStops:
+          type: array
+          description: Units stopped individually by an operator.
+          items: { type: string }
