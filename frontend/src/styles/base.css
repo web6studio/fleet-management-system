@@ -1,0 +1,127 @@
+@layer reset, base;
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  legend {
+    padding: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  p,
+  dd,
+  figure {
+    margin: 0;
+  }
+
+  ol,
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark light;
+  }
+
+  body {
+    background: var(--canvas);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: var(--text-md);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Every stacked number is tabular everywhere: a battery column that shifts while being
+     scanned is a defect, not a detail. */
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .scroll-area {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line2) transparent;
+    overscroll-behavior: contain;
+  }
+
+  /* Honouring the preference is not a component's decision, so it has to outrank every
+     component rule. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      /* biome-ignore lint/complexity/noImportantStyles: must outrank component rules */
+      animation-duration: 0.01ms !important;
+      /* biome-ignore lint/complexity/noImportantStyles: must outrank component rules */
+      animation-iteration-count: 1 !important;
+      /* biome-ignore lint/complexity/noImportantStyles: must outrank component rules */
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Off-screen until focused, which is the whole point: a sighted keyboard user needs the
+   way past a thirty-control list, and nobody else should see it. */
+.skip-links a {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 8px 14px;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-control);
+  background: var(--raised);
+  color: var(--fg);
+  font-size: var(--text-md);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-links a:focus-visible {
+  transform: none;
+}

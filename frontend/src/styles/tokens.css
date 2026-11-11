@@ -1,0 +1,103 @@
+/* Fleet Management System — design tokens (v2)
+   Source of truth for colours, type, radii. Dark is the default theme.
+   Rule: status hues are used ONLY for unit state, battery band and alarm severity.
+   Buttons, selection and navigation use ink inversion (--inv-bg / --inv-fg). */
+
+:root {
+  /* type */
+  --font-sans: "Geist", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --text-xs: 11px; /* meta, tags, legend */
+  --text-sm: 12px; /* secondary, section heads (600) */
+  --text-md: 13px; /* body, buttons */
+  --text-lg: 15px; /* panel titles (600) */
+  --text-num: 22px; /* barometer counters (mono 500) */
+
+  /* shape: round = information, 8px = action */
+  --radius-control: 8px; /* buttons, inputs, chips, segmented controls */
+  --radius-tile: 8px; /* metric tiles, diag rows */
+  --radius-panel: 12px; /* columns, banners, popovers */
+  --radius-pill: 999px; /* badges, status discs, tags */
+  --control-h: 36px; /* default button height; compact = 28px */
+  --gap: 12px; /* column gutter and page padding */
+
+  /* motion — added to the handed-over tokens, because timing is a design decision too.
+     Two durations only: one for what the pointer is doing, one for what the fleet is doing.
+     Anything slower than --dur-slow reads as lag rather than as motion. */
+  --dur-fast: 120ms; /* hover, press, selection */
+  --dur-slow: 240ms; /* panels and badges appearing */
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --tick: 1s; /* one telemetry interval: markers glide over exactly this */
+
+  /* status — ISO 7010 / IEC 60073, identical in both themes */
+  --st-active: #2e7d32;
+  --st-active-rgb: 46, 125, 50;
+  --on-active: #ffffff;
+  --st-idle: #1565c0;
+  --st-idle-rgb: 21, 101, 192;
+  --on-idle: #ffffff;
+  --st-charging: #f57f17;
+  --st-charging-rgb: 245, 127, 23;
+  --on-charging: #111316;
+  --st-stopped: #e65100;
+  --st-stopped-rgb: 230, 81, 0;
+  --on-stopped: #111316; /* paused / operator stop / E-stop */
+  --st-error: #c62828;
+  --st-error-rgb: 198, 40, 40;
+  --on-error: #ffffff;
+  --st-offline: #616161;
+  --st-offline-rgb: 120, 128, 136;
+  --on-offline: #ffffff;
+  /* badge recipe: background rgba(<rgb>, .16); border rgba(<rgb>, .5); text var(--fg); solid colour only in the 16px disc */
+
+  /* battery bands (§5.2): >30 normal (neutral outline badge), 15–30 low, 5–15 critical, <5 emergency */
+  --bat-normal: var(--st-active);
+  --bat-low: var(--st-charging);
+  --bat-critical: var(--st-stopped);
+  --bat-emergency: var(--st-error);
+}
+
+/* dark (default) */
+:root,
+[data-theme="dark"] {
+  --canvas: #0f1114;
+  --panel: #171a1e; /* columns AND map stage */
+  --raised: #1e2227; /* tiles, selected row, secondary buttons */
+  --hover: #252a30;
+  --line: #272c32; /* dividers */
+  --line2: #3a4149; /* control borders */
+  --fg: #e7e9ec; /* 14.3:1 on panel */
+  --fg2: #aeb5bd; /* 8.4:1 */
+  --fg3: #8b939c; /* 5.6:1, AA on every surface */
+  --inv-bg: #e7e9ec; /* primary button, selected chip/floor */
+  --inv-fg: #111316;
+  --marker-ring: #0f1114;
+  --stage-dot: #252a30;
+  --plan-slab: #1b1f23;
+  --plan-room: #1f2328;
+  --plan-corr: #262b31;
+  --plan-wall: #444b54;
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+}
+
+/* light (daylight stations) */
+[data-theme="light"] {
+  --canvas: #eceef1;
+  --panel: #ffffff;
+  --raised: #f5f6f8;
+  --hover: #ebedf0;
+  --line: #e1e4e8;
+  --line2: #c7ccd3;
+  --fg: #14171b; /* 18.1:1 */
+  --fg2: #4b535d; /* 7.8:1 */
+  --fg3: #666e79; /* 5.2:1 on panel only */
+  --inv-bg: #14171b;
+  --inv-fg: #f7f8fa;
+  --marker-ring: #ffffff;
+  --stage-dot: #e3e6ea;
+  --plan-slab: #f4f6f8;
+  --plan-room: #ffffff;
+  --plan-corr: #e8ebef;
+  --plan-wall: #b3bac3;
+  --shadow: 0 10px 28px rgba(20, 23, 27, 0.12);
+}
