@@ -1,0 +1,453 @@
+.map-panel {
+  min-height: 0;
+}
+
+.map-head {
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.floor-tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 9px;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+.map-live {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+.map-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: var(--fg2);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* The dot only pulses while frames are actually arriving. A steady dot beside
+   "Reconnecting" is the honest picture: nothing is coming in. */
+.map-live-warn .map-live-dot {
+  background: var(--st-charging);
+  animation: none;
+}
+
+.map-live-bad {
+  color: var(--fg);
+}
+
+.map-live-bad .map-live-dot {
+  background: var(--st-error);
+  animation: none;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+/* ── stage ────────────────────────────────────────────────────────────────── */
+.map-stage {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  container-type: size;
+  background-color: var(--panel);
+  background-image: radial-gradient(var(--stage-dot) 1.1px, transparent 1.4px);
+  background-size: 18px 18px;
+}
+
+/* The frame keeps the plan's 5:4 aspect and fits whichever of width or height runs out
+   first, so the building is never cropped and never stretched. */
+.map-frame {
+  position: relative;
+  width: min(calc(100cqw - 40px), calc((100cqh - 40px) * 1.25));
+  aspect-ratio: 1000 / 800;
+  overflow: hidden;
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  background: var(--plan-slab);
+  /* The drag is handled here; letting the browser scroll the page at the same time makes
+     the gesture fight itself on a touchpad. */
+  touch-action: none;
+}
+
+.map-frame-pannable {
+  cursor: grab;
+  /* A drag across the plan must not start selecting its zone labels. */
+  user-select: none;
+}
+
+.map-frame-panning {
+  cursor: grabbing;
+}
+
+/* The transform is written by usePanZoom, including whether it animates: a drag must track
+   the pointer exactly, while a zoom or a re-centre should glide. */
+.map-scaler {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.plan-surface {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* A storey whose plan has not been surveyed. Deliberately plain: a styled empty frame would
+   read as a floor with no robots on it. */
+.map-no-plan {
+  max-width: 34ch;
+  padding: 24px;
+  color: var(--fg3);
+  font-size: var(--text-md);
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* ── plan geometry ────────────────────────────────────────────────────────── */
+.plan-slab {
+  fill: var(--plan-slab);
+}
+
+.plan-room {
+  fill: var(--plan-room);
+  stroke: var(--plan-wall);
+  stroke-width: 3;
+}
+
+.plan-corridor,
+.plan-door {
+  fill: var(--plan-corr);
+}
+
+.plan-wall {
+  fill: none;
+  stroke: var(--plan-wall);
+  stroke-width: 8;
+}
+
+.plan-fixture,
+.plan-fixture-line {
+  fill: none;
+  stroke: var(--plan-wall);
+  stroke-width: 2;
+}
+
+/* Dashed outlines are charging bays: marked floor, not built structure. */
+.plan-bay {
+  fill: none;
+  stroke: var(--fg3);
+  stroke-width: 2;
+  stroke-dasharray: 7 6;
+}
+
+.plan-label {
+  fill: var(--fg3);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-anchor: middle;
+  /* Painting the stroke under the fill knocks the room colour out from behind the text,
+     so a label stays readable where it crosses a wall. */
+  paint-order: stroke;
+  stroke: var(--plan-room);
+  stroke-width: 8px;
+  stroke-linejoin: round;
+}
+
+/* Trails are neutral ink, never a status hue: a coloured path reads as a fault somewhere
+   along that corridor. Each is drawn as several pieces whose stroke-opacity ramps towards
+   the unit, so where two paths cross, the fresher one is the brighter one. The opacity here
+   is the trail's overall strength; the ramp multiplies into it. */
+.plan-trail {
+  fill: none;
+  stroke: var(--fg2);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 9;
+  opacity: 0.5;
+}
+
+.plan-trail-selected {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+
+/* ── markers ──────────────────────────────────────────────────────────────── */
+.marker {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+  /* Telemetry arrives once a second; without this the fleet reads as a slideshow. Linear
+     over exactly one interval, so a marker arrives as its next position does — easing it
+     would make every unit appear to accelerate and brake between frames. */
+  transition:
+    left var(--tick) linear,
+    top var(--tick) linear;
+}
+
+.marker-selected {
+  z-index: 5;
+}
+
+.marker.tone-error {
+  z-index: 4;
+}
+
+.marker-disc {
+  transition: background-color var(--dur-slow) var(--ease);
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  background: var(--tone);
+  color: var(--on-tone);
+  box-shadow:
+    0 0 0 2px var(--marker-ring),
+    0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.marker-offline .marker-disc {
+  opacity: 0.75;
+}
+
+.marker-heading {
+  display: grid;
+  place-items: center;
+}
+
+.marker-ring {
+  position: absolute;
+  inset: 1px;
+  border: 2px solid var(--fg);
+  border-radius: var(--radius-pill);
+}
+
+.marker-ping {
+  position: absolute;
+  inset: 4px;
+  border: 2px solid var(--st-error);
+  border-radius: var(--radius-pill);
+  animation: ping 1.6s ease-out infinite;
+}
+
+@keyframes ping {
+  from {
+    transform: scale(0.7);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* Grey and dashed on purpose: this is where the unit believes it is, not a status. */
+.marker-uncertainty {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: 1.5px dashed var(--fg2);
+  border-radius: var(--radius-pill);
+  background: rgba(140, 150, 160, 0.1);
+}
+
+.marker-held {
+  position: absolute;
+  left: 22px;
+  top: 2px;
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--radius-pill);
+  background: var(--st-stopped);
+  color: var(--on-stopped);
+  box-shadow: 0 0 0 2px var(--marker-ring);
+}
+
+.marker-label {
+  position: absolute;
+  left: 34px;
+  top: 8px;
+  padding: 1px 7px;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-pill);
+  background: var(--panel);
+  color: var(--fg2);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.marker-selected .marker-label {
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+}
+
+/* ── floating controls ────────────────────────────────────────────────────── */
+.floor-switcher,
+.map-zoom {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px;
+  background: var(--panel);
+  border: 1px solid var(--line2);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.floor-switcher {
+  top: 16px;
+  right: 16px;
+}
+
+.map-zoom {
+  right: 16px;
+  bottom: 16px;
+}
+
+.floor-switcher-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 72px;
+  height: 34px;
+  padding: 0 9px 0 12px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--fg2);
+  cursor: pointer;
+}
+
+.floor-switcher-item {
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.floor-switcher-item:hover {
+  background: var(--hover);
+  color: var(--fg);
+}
+
+.floor-switcher-item[aria-pressed="true"] {
+  background: var(--inv-bg);
+  color: var(--inv-fg);
+}
+
+.floor-switcher-name {
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+.floor-switcher-count {
+  font-size: var(--text-xs);
+  opacity: 0.75;
+}
+
+.floor-switcher-flag {
+  position: absolute;
+  top: 5px;
+  left: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--st-error);
+  box-shadow: 0 0 0 1.5px var(--panel);
+}
+
+.map-scale-bar {
+  position: absolute;
+  left: 14px;
+  bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 10.5px;
+  color: var(--fg3);
+}
+
+.map-scale-rule {
+  height: 6px;
+  border: 1.5px solid var(--fg3);
+  border-top: 0;
+}
+
+/* ── legend ───────────────────────────────────────────────────────────────── */
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  color: var(--fg2);
+}
+
+.map-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-legend-estimate {
+  width: 14px;
+  height: 14px;
+  border: 1.5px dashed var(--fg2);
+  border-radius: var(--radius-pill);
+}
+
+.map-legend-unmapped {
+  margin-left: auto;
+  color: var(--fg);
+}
+
+@media (max-width: 1100px) {
+  .map-panel {
+    min-height: 560px;
+  }
+}
