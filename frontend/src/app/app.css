@@ -44,10 +44,11 @@
 
 .panel-head {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 10px;
   flex: none;
   padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--line);
 }
 
 .panel-head h2 {
@@ -62,38 +63,6 @@
 
 .panel-head-end {
   margin-left: auto;
-}
-
-.registry /* The right column swaps between alarms, a unit and a confirmation. A short fade reads as
-   one panel changing its contents rather than three panels flickering past. */
-.inspector > * {
-  animation: panel-in var(--dur-slow) var(--ease);
-}
-
-@keyframes panel-in {
-  from {
-    opacity: 0;
-  }
-}
-
-.panel-head {
-  align-items: baseline;
-}
-
-.inspector /* The right column swaps between alarms, a unit and a confirmation. A short fade reads as
-   one panel changing its contents rather than three panels flickering past. */
-.inspector > * {
-  animation: panel-in var(--dur-slow) var(--ease);
-}
-
-@keyframes panel-in {
-  from {
-    opacity: 0;
-  }
-}
-
-.panel-head {
-  border-bottom: 1px solid var(--line);
 }
 
 /* Below this the three columns stop being columns: a 340px registry squeezed to 180px is a
