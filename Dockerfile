@@ -10,7 +10,7 @@ COPY e2e/package.json e2e/
 RUN pnpm install --frozen-lockfile
 COPY frontend/ frontend/
 COPY scripts/ scripts/
-RUN pnpm --dir frontend build && node scripts/stage-console.mjs
+RUN pnpm --dir frontend build && node scripts/stage-frontend.mjs
 
 FROM golang:1.27-alpine AS server
 WORKDIR /src

@@ -19,7 +19,7 @@ const to = join(root, "backend", "cmd", "server", "ui");
 const KEEP = "unbuilt.html";
 
 if (!existsSync(from)) {
-  console.error(`stage-console: ${from} does not exist. Run the front-end build first.`);
+  console.error(`stage-frontend: ${from} does not exist. Run the front-end build first.`);
   process.exit(1);
 }
 
@@ -34,4 +34,4 @@ for (const entry of readdirSync(to)) {
 cpSync(from, to, { recursive: true });
 
 const staged = readdirSync(to).filter((entry) => entry !== KEEP);
-console.log(`stage-console: ${staged.length} entries staged into backend/cmd/server/ui`);
+console.log(`stage-frontend: ${staged.length} entries staged into backend/cmd/server/ui`);

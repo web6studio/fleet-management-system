@@ -112,7 +112,7 @@ pnpm run check      # lint, type check, unit tests
 pnpm run test:e2e   # Playwright; requires pnpm run build first
 ```
 
-100 frontend unit tests, 45 backend tests, 13 end-to-end tests.
+104 frontend unit tests, 45 backend tests, 13 end-to-end tests.
 
 ## Scope
 

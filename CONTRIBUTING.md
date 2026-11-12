@@ -8,6 +8,7 @@ pnpm run dev          # API on :8080, vite dev server on :5173
 pnpm run check        # lint, type check, unit tests
 pnpm run build        # produces bin/server
 pnpm start            # runs the built binary
+pnpm stop             # stops it, and the dev server
 pnpm run test:e2e     # Playwright against the built binary
 pnpm run fmt
 ```
