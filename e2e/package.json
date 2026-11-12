@@ -1,0 +1,9 @@
+{
+  "name": "fleet-management-system-e2e",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.0"
+  }
+}

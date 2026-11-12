@@ -1,0 +1,11 @@
+node_modules
+**/node_modules
+frontend/dist
+backend/cmd/server/ui/assets
+backend/cmd/server/ui/index.html
+bin
+e2e/.results
+.git
+.github
+docs
+*.md
