@@ -50,6 +50,18 @@ it("leaves an action that can run enabled, with nothing to explain", async () =>
 
 // Prevents a second stop being sent while the first is still in flight. The server would
 // refuse it, and the operator would read the refusal as the first one having failed.
+// A runnable control says what it will do, not what it is called. "Stop" reads as a
+// facility-wide stop to anyone who has seen the header button, and that is the one
+// misreading on this panel that cannot be undone.
+it("gives a runnable control a tooltip describing its effect", () => {
+  renderActions(makeUnit("PUD-101", { state: "active" }));
+
+  const stop = screen.getByRole("button", { name: /Stop/ });
+  expect(stop.getAttribute("title")).toBe(
+    "Holds this unit where it stands. Every other unit keeps running.",
+  );
+});
+
 it("holds every control while a command is in flight", () => {
   const view = viewOf(makeUnit("PUD-101"));
   render(
@@ -61,12 +73,17 @@ it("holds every control while a command is in flight", () => {
 });
 
 // Prevents a unit that has gone quiet accepting orders: nothing can be delivered to it.
-it("blocks everything on a unit with no link, and says so", () => {
+it("blocks everything on a unit that stopped reporting, and says so", () => {
   renderActions(makeUnit("PUD-166", { state: "offline" }));
 
   for (const button of screen.getAllByRole("button")) {
     expect(button).toHaveProperty("disabled", true);
   }
-  const reasons = screen.getAllByRole("listitem").map((item) => item.textContent);
-  expect(reasons).toContain("Stop — No link — a stop cannot be delivered");
+  // Said once, not once per button: one silent radio is one problem, not four.
+  expect(screen.queryAllByRole("listitem")).toHaveLength(0);
+  expect(
+    screen.getByText(
+      "This unit stopped reporting. Commands cannot reach it until it is back online.",
+    ),
+  ).toBeTruthy();
 });

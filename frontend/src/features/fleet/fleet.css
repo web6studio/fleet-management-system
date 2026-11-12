@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
-  padding: 0 12px;
+  padding: 12px 12px 0;
 }
 
 .barometer-tile {
@@ -66,12 +66,15 @@
 .bucket-attention {
   --bucket-color: var(--st-error);
 }
+
 .bucket-active {
   --bucket-color: var(--st-active);
 }
+
 .bucket-standby {
   --bucket-color: var(--st-idle);
 }
+
 .bucket-offline {
   --bucket-color: var(--st-offline);
 }

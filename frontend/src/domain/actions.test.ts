@@ -51,7 +51,7 @@ it("gives every blocked action a reason", () => {
 });
 
 describe("availability", () => {
-  it("offers nothing to a unit with no link", () => {
+  it("offers nothing to a unit that stopped reporting", () => {
     const reasons = blocked("offline");
     expect(Object.values(reasons).every((reason) => reason !== null)).toBe(true);
   });
