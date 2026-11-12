@@ -31,6 +31,7 @@ A light theme is available. Status colours are the same in both themes.
 pnpm install
 pnpm run build     # builds the frontend, embeds it, compiles bin/server
 pnpm start         # runs the binary
+pnpm stop          # stops it (and the dev server), whatever terminal it was started from
 ```
 
 Then open http://127.0.0.1:8080. The frontend is served by the binary; there is no separate
