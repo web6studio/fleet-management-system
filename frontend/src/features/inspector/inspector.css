@@ -1,0 +1,328 @@
+.inspector-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: none;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.inspector-identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.inspector-identity h2 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.inspector-close {
+  margin-left: auto;
+}
+
+.inspector-subtitle {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+.inspector-subtitle strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.inspector-age {
+  margin-left: auto;
+  flex: none;
+  font-size: 11.5px;
+  color: var(--fg3);
+}
+
+/* ── quick actions ────────────────────────────────────────────────────────── */
+.quick-actions {
+  flex: none;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.quick-actions-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 8px;
+  font-size: 11.5px;
+  color: var(--fg3);
+}
+
+.quick-actions-reasons span {
+  color: var(--fg2);
+  font-weight: 600;
+}
+
+/* ── body ─────────────────────────────────────────────────────────────────── */
+.inspector-body {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.inspector-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.inspector-section:last-child {
+  border-bottom: 0;
+  padding-bottom: 18px;
+}
+
+.inspector-section h3 {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--fg2);
+}
+
+.inspector-note {
+  font-size: 11.5px;
+  color: var(--fg3);
+  line-height: 1.5;
+}
+
+/* ── active task ──────────────────────────────────────────────────────────── */
+.task-name {
+  font-size: 14px;
+}
+
+.task-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--fg3);
+}
+
+.task-idle {
+  color: var(--fg2);
+}
+
+.task-held {
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+/* ── metrics ──────────────────────────────────────────────────────────────── */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-tile);
+  background: var(--raised);
+}
+
+.metric-label {
+  font-size: 11.5px;
+  color: var(--fg3);
+}
+
+.metric-value {
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.metric-note {
+  font-size: var(--text-xs);
+  color: var(--fg3);
+}
+
+.metric-badge {
+  align-self: flex-start;
+  height: 18px;
+  padding-right: 8px;
+  font-size: var(--text-xs);
+}
+
+/* ── callout ──────────────────────────────────────────────────────────────── */
+.callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--tone-rgb), 0.55);
+  border-radius: var(--radius-tile);
+  background: rgba(var(--tone-rgb), 0.1);
+  font-size: 12.5px;
+}
+
+.callout-disc {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--tone);
+  color: var(--on-tone);
+}
+
+/* ── confidence ───────────────────────────────────────────────────────────── */
+.confidence {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.confidence-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+.confidence-head strong {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.confidence-note {
+  font-size: 11.5px;
+  color: var(--fg2);
+}
+
+/* ── telemetry ────────────────────────────────────────────────────────────── */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.telemetry-grid > div:not(.telemetry-where) {
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-tile);
+}
+
+.telemetry-grid dt {
+  font-size: var(--text-xs);
+  color: var(--fg3);
+}
+
+.telemetry-grid dd {
+  font-size: var(--text-md);
+}
+
+.telemetry-where {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 16px;
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+.telemetry-where strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.telemetry-frame {
+  margin-left: auto;
+  color: var(--fg3);
+}
+
+.telemetry-nopos {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px dashed var(--line2);
+  border-radius: var(--radius-tile);
+  font-size: 12.5px;
+  color: var(--fg2);
+}
+
+.telemetry-nopos svg {
+  flex: none;
+}
+
+.telemetry-nopos strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* ── diagnostics ──────────────────────────────────────────────────────────── */
+.diagnostics {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.diagnostic {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-tile);
+  font-size: 12.5px;
+}
+
+/* Dashed means the vendor never sends this, which must not read like a failure. */
+.diagnostic-absent {
+  border-style: dashed;
+}
+
+.diagnostic-fault {
+  border-color: rgba(var(--st-error-rgb), 0.55);
+  background: rgba(var(--st-error-rgb), 0.1);
+}
+
+.diagnostic-unreported {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  border: 1.5px dashed var(--fg3);
+  border-radius: var(--radius-pill);
+}
+
+.diagnostic-name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.diagnostic-detail {
+  flex: none;
+  font-size: 11.5px;
+  color: var(--fg3);
+}
+
+.diagnostic-fault .diagnostic-detail {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* ── unit log ─────────────────────────────────────────────────────────────── */
+.unit-log > .alarm {
+  border-bottom: 1px solid var(--line);
+}
+
+.unit-log > .alarm:last-child {
+  border-bottom: 0;
+}

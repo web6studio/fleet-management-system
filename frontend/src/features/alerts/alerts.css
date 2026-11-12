@@ -1,0 +1,220 @@
+/* ── alarm list ───────────────────────────────────────────────────────────── */
+.alarm-bulk {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.alarm-bulk-hint,
+.alarm-bulk-prompt {
+  font-size: var(--text-sm);
+  color: var(--fg3);
+}
+
+.alarm-bulk-prompt {
+  color: var(--fg2);
+}
+
+.alarm-bulk-action {
+  margin-left: auto;
+}
+
+.alarm-list {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.alarm-list > li {
+  border-bottom: 1px solid var(--line);
+}
+
+.alarm-empty {
+  padding: 24px 16px;
+  color: var(--fg3);
+  font-size: 12.5px;
+}
+
+/* ── alarm entry ──────────────────────────────────────────────────────────── */
+.alarm {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+.alarm-critical {
+  background: rgba(var(--st-error-rgb), 0.06);
+}
+
+.alarm-compact {
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.alarm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.alarm-title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.alarm-title strong {
+  font-size: var(--text-md);
+  font-weight: 600;
+}
+
+.alarm-compact .alarm-title strong {
+  font-size: 12.5px;
+}
+
+.alarm-title time {
+  margin-left: auto;
+  flex: none;
+  font-size: 11.5px;
+  color: var(--fg3);
+}
+
+.alarm-detail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+.alarm-unit {
+  font-size: var(--text-sm);
+}
+
+/* Acknowledged entries stay in the list and recede. Hiding them would be the system
+   claiming a condition cleared itself. */
+.is-owned {
+  opacity: 0.55;
+}
+
+.alarm,
+.alarm-title,
+.alarm-detail,
+.alarm-severity {
+  transition:
+    opacity var(--dur-slow) var(--ease),
+    background-color var(--dur-slow) var(--ease);
+}
+
+.alarm-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  margin-top: 4px;
+}
+
+.alarm-compact .alarm-actions {
+  min-height: 26px;
+  margin-top: 3px;
+}
+
+.alarm-severity {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border: 1px solid rgba(var(--tone-rgb), 0.5);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--tone-rgb), 0.14);
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.alarm-compact .alarm-severity {
+  height: 18px;
+  padding: 0 7px;
+}
+
+.alarm-prompt {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--fg2);
+}
+
+.alarm-ack,
+.alarm-owned {
+  margin-left: auto;
+}
+
+.alarm-owned {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--fg3);
+}
+
+/* ── emergency-stop confirmation ──────────────────────────────────────────── */
+.confirm-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 16px;
+}
+
+.confirm-lead {
+  font-size: var(--text-lg);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.confirm-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.confirm-fact {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-tile);
+  background: var(--raised);
+  font-size: 12.5px;
+  color: var(--fg2);
+}
+
+.confirm-fact-head {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.confirm-fact-icon {
+  flex: none;
+  margin-top: 1px;
+  color: var(--fg);
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-actions .btn-lg {
+  height: 40px;
+  font-size: 14px;
+}
+
+.confirm-disclaimer {
+  font-size: 11.5px;
+  color: var(--fg3);
+  line-height: 1.5;
+}
