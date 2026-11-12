@@ -1,0 +1,135 @@
+# Fleet Management System
+
+Real-time monitoring and control for service robots across multi-storey indoor facilities.
+One operator supervises robots in buildings: the UI shows fleet
+status, robot positions on floor plans, and per-unit diagnostics, and sends commands.
+
+A Go service streams telemetry over a WebSocket, a React frontend renders it, and both ship
+as one binary.
+
+**Live demo: https://fleet-management-system.fly.dev**
+
+![Fleet registry, floor plan and alarm console](docs/images/dashboard.jpg)
+
+Selecting a unit opens its inspector: current task, battery and health, telemetry, and the
+commands it will accept.
+
+![Unit inspector](docs/images/inspector.jpg)
+
+A light theme is available. Status colours are the same in both themes.
+
+![Light theme](docs/images/dashboard-light.jpg)
+
+## Requirements
+
+- Go 1.25+
+- Node 22+ and pnpm 10+
+
+## Build and run
+
+```sh
+pnpm install
+pnpm run build     # builds the frontend, embeds it, compiles bin/server
+pnpm start         # runs the binary
+```
+
+Then open http://127.0.0.1:8080. The frontend is served by the binary; there is no separate
+web server to start.
+
+### Development
+
+The build step embeds the frontend, so a rebuild is needed to see frontend changes. During
+development, run the API and the vite dev server together instead:
+
+```sh
+pnpm run dev
+```
+
+Then open http://127.0.0.1:5173. Vite serves the frontend with hot reload and proxies
+`/api` to the Go server on port 8080.
+
+To start with one facility unreachable:
+
+```sh
+pnpm run dev:api -- -outage=clinic
+```
+
+### Docker
+
+```sh
+docker build -t fleet-management-system .
+docker run -p 8080:8080 fleet-management-system
+```
+
+## Architecture
+
+![Runtime architecture](docs/images/architecture.jpg)
+
+HTTP carries requests that need a response: configuration, the initial snapshot, and
+commands. The WebSocket carries state changes pushed by the server.
+
+Each published change increments a version counter by one. A client that receives
+`version > local + 1` has missed a frame; it requests a snapshot and ignores deltas until it
+arrives. The server drops frames for subscribers that cannot keep up, so a slow client does
+not block the others.
+
+Commands return `202 Accepted`. The unit's next telemetry frame confirms the result, so the
+UI does not apply optimistic updates.
+
+See [docs/architecture.md](docs/architecture.md) for details and
+[docs/adr/](docs/adr/) for design decisions.
+
+## API
+
+| Transport | Carries                           | Specification                                  |
+| --------- | --------------------------------- | ---------------------------------------------- |
+| HTTP      | configuration, snapshot, commands | [docs/api/openapi.yaml](docs/api/openapi.yaml) |
+| WebSocket | state changes                     | [docs/api/websocket.md](docs/api/websocket.md) |
+
+## Project structure
+
+```
+backend/
+  cmd/server/        entry point, flags, embedded frontend
+  internal/fleet/    domain types and the store
+  internal/sim/      simulated telemetry
+  internal/api/      HTTP handlers and the WebSocket stream
+frontend/
+  src/domain/        status, battery, command rules (no React)
+  src/data/          HTTP client, query cache, stream client
+  src/features/      header, fleet, map, inspector, alerts
+  src/components/    shared UI components
+e2e/                 Playwright tests against the built binary
+docs/                architecture, simulation, API specs, ADRs
+scripts/             build helpers
+```
+
+## Tests
+
+```sh
+pnpm run check      # lint, type check, unit tests
+pnpm run test:e2e   # Playwright; requires pnpm run build first
+```
+
+100 frontend unit tests, 45 backend tests, 13 end-to-end tests.
+
+## Limitations
+
+Telemetry is simulated. See [docs/simulation.md](docs/simulation.md) for what is simulated
+and how to replace it.
+
+Not implemented:
+
+- **Authentication and multi-tenancy.** Acknowledgements are attributed to a fixed operator.
+- **Telemetry ingestion.** No MQTT or HTTP ingest path, no producer validation or rate
+  limiting.
+- **Alarm derivation.** Alarms come from fixtures; a production system computes them from
+  telemetry on a server-side timer.
+- **Persistence.** State is in memory and lost on restart. No history or audit log.
+- **Horizontal scaling.** Single instance. Multiple instances require a message bus and a
+  replay buffer keyed by version.
+- **Observability.** No metrics or tracing.
+
+## Licence
+
+MIT
