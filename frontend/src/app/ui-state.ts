@@ -74,7 +74,7 @@ export function inspectorMode(state: UiState): InspectorMode {
 /**
  * All view state in one reducer.
  *
- * Server state — what the units report, who owns which alarm, which facilities are held —
+ * Server state (what the units report, who owns which alarm, which facilities are held)
  * lives in the fleet source. Keeping the two apart is what stops a click from writing into
  * something the next telemetry frame will silently overwrite.
  */
@@ -157,8 +157,8 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
 /**
  * Draws a different storey, fitting it to the frame.
  *
- * Zoom is always aimed at something — a wing, a corridor, one robot — and none of that is in
- * the same place one floor up. `selectUnit` is the exception: it follows a unit across
+ * Zoom is always aimed at something, a wing or a corridor or one robot, and none of that
+ * is in the same place one floor up. `selectUnit` is the exception: it follows a unit across
  * floors and re-centres on it, so the magnification still points at what was asked for.
  */
 function showFloor(state: UiState, floor: string): UiState {

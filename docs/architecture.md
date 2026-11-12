@@ -25,8 +25,8 @@ detects the loss and requests a snapshot.
 
 Delta frames omit each unit's trail and the client extends the history it holds, which cuts
 a telemetry frame from roughly 22 KB to 6.5 KB. The cost is a constant shared by both sides
-(the 60-point window) and a client that can no longer treat frames as self-contained — both
-acceptable because the version counter already detects divergence and `resync` repairs it.
+(the 60-point window) and a client that can no longer treat frames as self-contained. Both
+are acceptable: the version counter already detects divergence and `resync` repairs it.
 
 ### Command validation
 
@@ -53,7 +53,7 @@ other. CI enforces this.
 ### State
 
 Server state lives in the TanStack Query cache and is written only by the stream client.
-View state — selection, filters, zoom, theme, pending confirmations — lives in a reducer in
+View state (selection, filters, zoom, theme, pending confirmations) lives in a reducer in
 `app/ui-state.ts`. The two are never mixed, so a UI interaction cannot write into state that
 the next telemetry frame overwrites.
 
@@ -106,8 +106,8 @@ Runtime: `react`, `react-dom`, `@tanstack/react-query` on the frontend;
 `github.com/coder/websocket` on the backend. Everything else is standard library.
 
 The WebSocket library handles masking, fragmentation, close codes, ping/pong and the upgrade
-handshake — all of which are easy to get subtly wrong, and a framing bug looks like a flaky
-network rather than a defect.
+handshake. Each is easy to get subtly wrong, and a framing bug looks like a flaky network
+rather than a defect.
 
 Not used: ORM, state management library, router, component library, charting library,
 Tailwind. The frontend is a single screen with eight shared components and a token file.

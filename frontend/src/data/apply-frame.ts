@@ -13,8 +13,8 @@ const TRAIL_POINTS = 60;
  * What applying a frame did.
  *
  * `gap` is the interesting one: the client has missed at least one frame and must not guess
- * at what it was. It asks for a snapshot and ignores deltas until one arrives — the only
- * thing that keeps a dashboard honest after a dropped frame.
+ * at what it was. It asks for a snapshot and ignores deltas until one arrives, which is
+ * what keeps the screen honest after a dropped frame.
  */
 export type FrameResult =
   | { status: "applied"; snapshot: FleetSnapshot }
@@ -24,7 +24,7 @@ export type FrameResult =
 /**
  * Folds one stream frame into the current snapshot.
  *
- * Pure, so the gap rule can be tested without a socket — which matters, because the failure
+ * Pure, so the gap rule can be tested without a socket. That matters, because the failure
  * it prevents only appears under packet loss that is hard to reproduce by hand.
  */
 export function applyFrame(

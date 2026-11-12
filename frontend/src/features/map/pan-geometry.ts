@@ -8,7 +8,7 @@ export interface Size {
   height: number;
 }
 
-/** A position within the plan, 0–1 on each axis. */
+/** A position within the plan, 0-1 on each axis. */
 export interface PanFocus {
   x: number;
   y: number;
@@ -45,7 +45,7 @@ export function clampPan(offset: Offset, frame: Size, zoom: number): Offset {
 function clamp(value: number, limit: number): number {
   const bounded = Math.max(-limit, Math.min(limit, value));
   // Negating zero yields -0, which is harmless in a transform and surprising everywhere
-  // else — including in a test's expectations. Normalised here rather than at each caller.
+  // else, including in a test's expectations. Normalised here rather than at each caller.
   return bounded === 0 ? 0 : bounded;
 }
 

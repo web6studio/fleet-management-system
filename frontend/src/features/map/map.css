@@ -210,7 +210,7 @@
   cursor: pointer;
   z-index: 2;
   /* Telemetry arrives once a second; without this the fleet reads as a slideshow. Linear
-     over exactly one interval, so a marker arrives as its next position does — easing it
+     over exactly one interval, so a marker arrives as its next position does. Easing it
      would make every unit appear to accelerate and brake between frames. */
   transition:
     left var(--tick) linear,

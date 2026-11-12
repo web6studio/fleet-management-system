@@ -12,8 +12,8 @@ const queryKeys = {
 };
 
 /**
- * The buildings. Static between deployments, so it is fetched once and never refetched —
- * the stream carries everything that moves.
+ * The buildings. Static between deployments, so it is fetched once and never refetched.
+ * The stream carries everything that moves.
  */
 export function useSites() {
   return useQuery({
@@ -77,8 +77,8 @@ export function useFleetStream(): ConnectionState {
 /**
  * Commands are accepted, not applied, so none of these mutations touches the cache.
  *
- * The fleet changes when the server says it changed — the stream delivers that as a frame
- * like any other. Writing an optimistic result here would show an operator a unit they
+ * The fleet changes when the server says it changed, and the stream delivers that as a
+ * frame like any other. Writing an optimistic result here would show an operator a unit they
  * believe they stopped, seconds before it reports that it did not.
  */
 export function useUnitCommand() {

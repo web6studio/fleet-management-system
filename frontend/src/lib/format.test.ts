@@ -26,7 +26,7 @@ describe("formatDuration", () => {
 //
 // Prevents "-90°" in the telemetry panel. Headings arrive in radians measured
 // counter-clockwise and go negative either side of east; an operator reading a bearing out
-// loud to someone standing on the floor needs 0–359.
+// loud to someone standing on the floor needs 0-359.
 describe("formatHeading", () => {
   it("normalises every angle into 0-359", () => {
     expect(formatHeading(0)).toBe("0°");

@@ -69,8 +69,8 @@ func planFor(t *testing.T, unit fleet.Unit) fleet.FloorPlan {
 }
 
 // Prevents the whole building being drawn as one storey repeated. A dock level is not a
-// guest corridor, and showing the same rooms on every floor makes the plan decorative —
-// an operator cannot tell F1 from F3 and stops reading the map at all.
+// guest corridor, and showing the same rooms on every floor makes the plan decorative. An
+// operator cannot tell F1 from F3 and stops reading the map at all.
 func TestEveryStoreyHasItsOwnPlan(t *testing.T) {
 	for _, site := range load(t).Sites {
 		seen := make(map[string]string, len(site.Floors))
@@ -89,7 +89,7 @@ func TestEveryStoreyHasItsOwnPlan(t *testing.T) {
 
 // Prevents a fleet that drives to the end of its routes and parks there. A shuttle has to
 // turn round, and the reversal is the one line of the stepper with no visible symptom until
-// several minutes in — by which time every robot on the floor has stopped moving.
+// several minutes in, by which time every robot on the floor has stopped moving.
 func TestShuttlesTurnRound(t *testing.T) {
 	sim := run(t, 1)
 

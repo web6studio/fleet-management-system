@@ -1,4 +1,4 @@
-# ADR 0005 — Render floor plans as SVG, one per storey
+# ADR 0005: Render floor plans as SVG, one per storey
 
 ## Context
 

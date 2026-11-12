@@ -1,8 +1,8 @@
 // Moves the vite build to where `go:embed` can see it.
 //
 // `go:embed` cannot reach outside its own package directory, so the bundle has to be copied
-// rather than built in place. Done in Node — already required by pnpm — so the project still
-// needs neither make nor a POSIX shell, which is the rule the root package.json follows.
+// rather than built in place. Done in Node, which pnpm already requires, so the project
+// still needs neither make nor a POSIX shell.
 //
 // `ui/unbuilt.html` is committed and survives: it is what `go:embed` anchors on in a fresh
 // clone, and what the binary serves when nobody ran this script.
@@ -19,7 +19,7 @@ const to = join(root, "backend", "cmd", "server", "ui");
 const KEEP = "unbuilt.html";
 
 if (!existsSync(from)) {
-  console.error(`stage-console: ${from} does not exist — run the front-end build first.`);
+  console.error(`stage-console: ${from} does not exist. Run the front-end build first.`);
   process.exit(1);
 }
 

@@ -1,4 +1,4 @@
-# ADR 0002 — Simulate telemetry inside the server, behind a package boundary
+# ADR 0002: Simulate telemetry inside the server, behind a package boundary
 
 ## Context
 

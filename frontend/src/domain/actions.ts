@@ -95,7 +95,7 @@ export function commandSentMessage(command: UnitCommand, unit: Unit): string {
       return `${unit.id} stopped where it stands. Every other unit keeps running.`;
     case "resume":
       return unit.task
-        ? `Resume sent to ${unit.id} — continues “${unit.task}”`
+        ? `Resume sent to ${unit.id} — continues "${unit.task}"`
         : `Resume sent to ${unit.id}`;
     case "start":
       return `Start sent to ${unit.id} — next queued mission: ${unit.nextTask ?? "from the queue"}`;

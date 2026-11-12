@@ -2,7 +2,7 @@
 
 `internal/sim` replaces the robot fleet. It loads units from `fixtures.json`, updates
 positions once per second, and passes changed units to the store through
-`store.ApplyTelemetry` — the same entry point a real ingest path would use.
+`store.ApplyTelemetry`, the same entry point a real ingest path would use.
 
 Everything downstream runs unmodified: versioning, ordering, gap detection, command
 validation, the WebSocket stream and the frontend. `fleet.Unit` carries no indication of
@@ -58,7 +58,7 @@ derives them from telemetry on a server-side timer: pose unchanged while reporti
 
 - No ingest path: no batching, no producer validation, no per-unit rate limiting.
 - Movement is scripted, as described above.
-- `start` and `dock` are accepted but change nothing — there is no task queue.
+- `start` and `dock` are accepted but change nothing, because there is no task queue.
 - No persistence. State is held in a map behind a mutex and lost on restart.
 
 ## Replacing it

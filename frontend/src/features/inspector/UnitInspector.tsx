@@ -35,7 +35,7 @@ export interface UnitInspectorProps {
  * then where it is, then its subsystems, then history.
  *
  * Controls first because they are what an operator reaches for in the seconds after
- * something goes wrong. The log is last because it is retrospective — it explains what
+ * something goes wrong. The log is last because it is retrospective: it explains what
  * already happened, and nobody reads it before acting.
  */
 export function UnitInspector({

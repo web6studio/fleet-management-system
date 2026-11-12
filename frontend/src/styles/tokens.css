@@ -1,4 +1,4 @@
-/* Fleet Management System — design tokens (v2)
+/* Fleet Management System design tokens (v2)
    Source of truth for colours, type, radii. Dark is the default theme.
    Rule: status hues are used ONLY for unit state, battery band and alarm severity.
    Buttons, selection and navigation use ink inversion (--inv-bg / --inv-fg). */
@@ -21,7 +21,7 @@
   --control-h: 36px; /* default button height; compact = 28px */
   --gap: 12px; /* column gutter and page padding */
 
-  /* motion — added to the handed-over tokens, because timing is a design decision too.
+  /* motion: timing is a design decision like any other.
      Two durations only: one for what the pointer is doing, one for what the fleet is doing.
      Anything slower than --dur-slow reads as lag rather than as motion. */
   --dur-fast: 120ms; /* hover, press, selection */
@@ -29,7 +29,7 @@
   --ease: cubic-bezier(0.2, 0, 0, 1);
   --tick: 1s; /* one telemetry interval: markers glide over exactly this */
 
-  /* status — ISO 7010 / IEC 60073, identical in both themes */
+  /* status: ISO 7010 / IEC 60073, identical in both themes */
   --st-active: #2e7d32;
   --st-active-rgb: 46, 125, 50;
   --on-active: #ffffff;
@@ -50,7 +50,7 @@
   --on-offline: #ffffff;
   /* badge recipe: background rgba(<rgb>, .16); border rgba(<rgb>, .5); text var(--fg); solid colour only in the 16px disc */
 
-  /* battery bands (§5.2): >30 normal (neutral outline badge), 15–30 low, 5–15 critical, <5 emergency */
+  /* battery bands (§5.2): >30 normal (neutral outline badge), 15-30 low, 5-15 critical, <5 emergency */
   --bat-normal: var(--st-active);
   --bat-low: var(--st-charging);
   --bat-critical: var(--st-stopped);

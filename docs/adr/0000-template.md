@@ -1,4 +1,4 @@
-# ADR NNNN — Title
+# ADR NNNN: Title
 
 Mark a replaced decision at the top: `Superseded by [ADR NNNN](./NNNN-slug.md)`. An ADR
 without that line is current.

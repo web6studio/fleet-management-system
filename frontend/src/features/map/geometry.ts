@@ -4,7 +4,7 @@ import type { Point, Pose } from "../../domain/types";
 /**
  * Turning plan coordinates into something the browser can draw.
  *
- * Only the map needs any of this. The conversions an operator *reads* — metres, world y —
+ * Only the map needs any of this. The conversions an operator *reads*, metres and world y,
  * are domain and live in `domain/plan.ts`.
  */
 
@@ -30,8 +30,8 @@ export function headingDegrees(pose: Pose): number {
  * How much of a unit's path the map draws, and how hard it fades towards the oldest end.
  *
  * The server keeps a full minute. Drawing all of it for every unit buries a busy floor under
- * its own history, so only the selection gets the whole route — and the fade is what lets
- * two paths that cross be told apart at the crossing, because the fresher one is brighter.
+ * its own history, so only the selection gets the whole route. The fade is what lets two
+ * crossing paths be told apart at the crossing, because the fresher one is brighter.
  */
 export const TRAIL = {
   /** The selected unit's whole route, faded gently so it stays readable end to end. */
@@ -61,7 +61,7 @@ export interface TrailStyle {
  * A unit's recent path, cut into pieces that fade towards the oldest end.
  *
  * Cut rather than given a gradient because an SVG gradient runs in a straight line across
- * the shape's box, while a trail turns corners — a scrubber's lane reversal would come out
+ * the shape's box, while a trail turns corners. A scrubber's lane reversal would come out
  * brightest in the middle. Consecutive pieces share their joining point, so the ramp has no
  * gaps in it.
  */
@@ -94,7 +94,7 @@ export function trailSegments(
  * Radius of the uncertainty circle, in plan units.
  *
  * Scaled from the confidence the unit publishes: at 42% it is a wide circle, at 69% a narrow
- * one. It shows where the unit believes it is — never a status, which is why it is drawn
+ * one. It shows where the unit believes it is, never a status, which is why it is drawn
  * grey and dashed rather than in a status colour.
  */
 export function uncertaintyRadius(confidence: number): number {

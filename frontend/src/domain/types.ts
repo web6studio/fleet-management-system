@@ -11,7 +11,7 @@ export type ReportedState = "active" | "idle" | "charging" | "error" | "offline"
 /**
  * What the dashboard shows, once operator and facility commands are folded in.
  *
- * `stopped` and `estop` are never reported by a unit — they are things an operator did to
+ * `stopped` and `estop` are never reported by a unit. They are things an operator did to
  * it, and keeping them out of {@link ReportedState} is what stops a command from being
  * mistaken for telemetry.
  */
@@ -40,7 +40,7 @@ export interface Pose extends Point {
 export interface Site {
   id: string;
   name: string;
-  /** Highest floor first — the order a building is read in, not the order an array is built in. */
+  /** Highest floor first, the order a building is read in. */
   floors: readonly string[];
   /** One plan per storey, keyed by floor id. A dock level is not a guest corridor. */
   plans: Readonly<Record<string, FloorPlan>>;
@@ -62,7 +62,7 @@ export interface Unit {
   /** Present-tense verb for an active unit: "Navigating", "Cleaning", "Escorting". */
   activity?: string;
   task: string | null;
-  /** 0–1, or `null` when the task reports no progress. */
+  /** 0-1, or `null` when the task reports no progress. */
   taskProgress: number | null;
   elapsed: string;
   eta?: string;
@@ -71,7 +71,7 @@ export interface Unit {
   battery: number;
   voltage: number;
   speed?: number;
-  /** SLAM confidence, 0–1. Absent for vendors that do not publish it. */
+  /** SLAM confidence, 0-1. Absent for vendors that do not publish it. */
   localization?: number;
   /** Short operator-facing fault, e.g. "E42" or "not moving". */
   errorCode?: string;
@@ -92,7 +92,7 @@ export interface Alarm {
   /** `null` for facility-wide alarms: the point of those is that they are one fault, not N. */
   unitId: string | null;
   detail: string;
-  /** Who owns it. Server state — an alarm owned on one screen is owned on every screen. */
+  /** Who owns it. Server state: an alarm owned on one screen is owned on every screen. */
   acknowledgedBy: string | null;
 }
 

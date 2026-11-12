@@ -48,7 +48,7 @@ const base: FleetSnapshot = {
 //
 // Prevents the failure that makes a live dashboard worse than a static one. Frames are
 // dropped for a slow client by design, so a client that applied version 12 on top of
-// version 10 would render a fleet that never existed — with nothing on screen admitting it.
+// version 10 would render a fleet that never existed, with nothing on screen admitting it.
 // The gap has to be noticed and repaired by asking for a snapshot.
 it("reports a gap when a frame is missed", () => {
   const ahead = applyFrame(base, {

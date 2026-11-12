@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
  * Operating the screen without a mouse.
  *
  * axe cannot answer this: a page can pass every automated rule and still be unusable from a
- * keyboard. What makes it work here is that every control is a real `<button>` — the
+ * keyboard. What makes it work here is that every control is a real `<button>`, and the
  * assertions below are what stop that quietly becoming a `<div onClick>`.
  */
 
@@ -16,7 +16,7 @@ test.beforeEach(async ({ page }) => {
 // The inspector is reachable without passing thirty controls first.
 //
 // The registry lists every unit and the map carries a button per robot. Without a way past
-// them, a keyboard user tabs about thirty times to reach the panel the actions are on —
+// them, a keyboard user tabs about thirty times to reach the panel the actions are on,
 // which in practice means the screen is mouse-only.
 test("offers a way past the long lists", async ({ page }) => {
   await page.keyboard.press("Tab");

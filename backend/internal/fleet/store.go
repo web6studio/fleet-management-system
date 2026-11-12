@@ -189,7 +189,7 @@ func (s *Store) SendCommand(unitID string, command Command) error {
 		delete(s.unitStops, unitID)
 	case CommandStart, CommandDock:
 		// Both re-task the unit. The simulator owns no task queue, so the fleet reports no
-		// change until its next frame — which is what a real command path looks like too.
+		// change until its next frame, which is what a real command path looks like too.
 	}
 
 	s.publishCommandsLocked()

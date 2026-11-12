@@ -3,7 +3,7 @@ import { Icon, type IconName } from "./Icon";
 
 /**
  * `primary` inverts ink rather than borrowing a status hue.
- * `danger` is reserved for stops — the one place red means an action, per IEC 60073.
+ * `danger` is reserved for stops, the one place red means an action, per IEC 60073.
  */
 export type ButtonVariant = "default" | "primary" | "danger" | "ghost" | "outline-stop";
 export type ButtonSize = "sm" | "md" | "lg";

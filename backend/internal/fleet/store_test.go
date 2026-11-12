@@ -56,8 +56,8 @@ func TestVersionIncrementsByOnePerChange(t *testing.T) {
 // A command the fleet cannot carry out is refused with a reason.
 //
 // Prevents a control that looks like it worked. The browser greys out what it expects to be
-// refused, but it does so from a frame that may be a second old — so the server has to be
-// the authority, and its answer has to say what an operator should do instead.
+// refused, but it does so from a frame that may be a second old. The server has to be the
+// authority, and its answer has to say what an operator should do instead.
 func TestCommandsAreRefusedWithAReason(t *testing.T) {
 	store := testStore()
 
@@ -111,8 +111,8 @@ func TestStopAndResume(t *testing.T) {
 	}
 }
 
-// Prevents an emergency stop that forgets when it was ordered — the banner says "since",
-// and a dash there is the one place an operator looks to know how long a floor has been held.
+// Prevents an emergency stop that forgets when it was ordered. The banner says "since", and
+// that is where an operator looks to know how long a floor has been held.
 func TestEmergencyStopRecordsWhenItWasOrdered(t *testing.T) {
 	store := testStore()
 
@@ -211,7 +211,7 @@ func TestUnsubscribeReleasesTheSubscriber(t *testing.T) {
 //
 // Prevents a silent, permanent loss. Two goroutines publishing at once could deliver v6
 // before v5; the client discards v5 as stale, then applies v7 against v6 without ever
-// seeing a gap — so the contents of v5 are gone and nothing on screen says so.
+// seeing a gap, so the contents of v5 are gone and nothing on screen says so.
 //
 // Frames may be dropped here, which is by design; only the order of what arrives is asserted.
 func TestUpdatesArriveInVersionOrder(t *testing.T) {

@@ -19,8 +19,8 @@ const THEMES: readonly { value: ThemeChoice; label: string }[] = [
  * Display preferences live behind their own control.
  *
  * A theme switch sitting loose in the header, next to an emergency stop, trains exactly the
- * wrong reflex. This also gives the next preference — density, units, refresh rate — a home
- * that is not the header.
+ * wrong reflex. It also gives the next preference, whether that is density or units or
+ * refresh rate, a home that is not the header.
  */
 export function DisplaySettings({
   open,

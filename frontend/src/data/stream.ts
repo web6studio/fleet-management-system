@@ -22,7 +22,7 @@ const ATTEMPTS_BEFORE_GIVING_UP = 5;
  * The telemetry stream, with the reconnection policy that makes it usable.
  *
  * Deliberately not a React hook: the socket outlives any render, and keeping it a plain
- * object means the backoff can be reasoned about — and tested — without a component tree.
+ * object means the backoff can be reasoned about, and tested, without a component tree.
  */
 export class FleetStream {
   #socket: WebSocket | undefined;
@@ -50,7 +50,7 @@ export class FleetStream {
 
     // Only an open socket is closed here. One still completing its handshake cannot be,
     // without the browser logging "WebSocket is closed before the connection is
-    // established" — which is exactly what React's development double-mount produces.
+    // established", which is exactly what React's development double-mount produces.
     // Clearing `#socket` already makes it stale, so its own open handler closes it.
     const socket = this.#socket;
     this.#socket = undefined;

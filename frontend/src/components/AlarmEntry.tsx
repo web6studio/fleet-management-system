@@ -21,7 +21,7 @@ export interface AlarmEntryProps {
  * One alarm, in the console and in a unit's own log.
  *
  * Acknowledging takes two clicks. It is the only action here that cannot be undone and
- * that other operators rely on — once owned, the next person assumes somebody is on it, so
+ * that other operators rely on. Once owned, the next person assumes somebody is on it, so
  * a single mis-click must not be able to make that claim.
  */
 export function AlarmEntry({

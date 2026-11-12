@@ -16,7 +16,7 @@ export interface EmergencyStopConfirmProps {
 /**
  * Mode C: the confirmation, in the right column rather than in a modal.
  *
- * A modal would cover the map and the registry — the two things an operator should be
+ * A modal would cover the map and the registry, the two things an operator should be
  * looking at while deciding whether to halt a building. Keeping it in the column leaves the
  * evidence on screen next to the decision.
  */

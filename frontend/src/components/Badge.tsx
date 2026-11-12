@@ -6,7 +6,7 @@ import type { Tone } from "./status-tone";
 export interface BadgeProps {
   tone?: Tone | undefined;
   icon?: IconName | undefined;
-  /** Neutral badges carry an outline instead of a tint — used for a normal battery. */
+  /** Neutral badges carry an outline instead of a tint, as a normal battery does. */
   neutral?: boolean;
   children: ReactNode;
   className?: string;

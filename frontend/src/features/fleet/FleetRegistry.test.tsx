@@ -105,7 +105,7 @@ describe("filters", () => {
   });
 });
 
-// Prevents a unit on another storey reading as missing. It is dimmed, not hidden — the
+// Prevents a unit on another storey reading as missing. It is dimmed, not hidden: the
 // registry lists the whole facility while the map shows one floor.
 it("marks a unit that is not on the shown floor", () => {
   renderRegistry();

@@ -43,7 +43,7 @@ describe("centreOn", () => {
 
   it("pulls a unit left of centre towards the middle", () => {
     // A quarter of the way across, at 2×: 0.25 × 800 × 2 = 400 to the right, which is also
-    // the limit — so the clamp and the formula agree at the extreme.
+    // the limit, so the clamp and the formula agree at the extreme.
     expect(centreOn({ x: 0.25, y: 0.5 }, frame, 2)).toEqual({ x: 400, y: 0 });
   });
 

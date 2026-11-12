@@ -36,7 +36,7 @@ describe("requests", () => {
 //
 // Prevents the one failure this error path exists for. The browser greys out what it expects
 // to be refused, so a refusal that gets through means the unit changed between the render
-// and the click — and "Clear the fault on GAU-203 first" is the only thing on screen that
+// and the click. "Clear the fault on GAU-203 first" is then the only thing on screen that
 // says what to do instead. A generic "request failed" would lose it.
 describe("refusals", () => {
   it("surfaces the problem detail", async () => {

@@ -115,7 +115,7 @@ func hotelGuestFloor() storey {
 	return storey{
 		plan: p.done(),
 		// Alternating sides gives each robot on the floor a different room, so two of them
-		// are never driving the same line of corridor at the same offset — which on a map
+		// are never driving the same line of corridor at the same offset, which on a map
 		// reads as one robot with a rendering glitch.
 		routes: map[role][]Route{
 			roleDeliver: alternatingErrands(firstDoor, pitch, 8),
@@ -314,7 +314,7 @@ func clinicOutpatients() storey {
 		label("DISPENSARY", 620, 700).
 		label("RECEPTION", 860, 700)
 
-	// Seating is laid out in blocks with aisles at 140, 380, 620 and 860 — the same four
+	// Seating is laid out in blocks with aisles at 140, 380, 620 and 860, the same four
 	// positions as the doors along the bottom, so a robot crossing the hall never has to
 	// squeeze between two rows of chairs.
 	hall := pt(500, 290)
@@ -555,8 +555,8 @@ func route(loop bool, points ...fleet.Point) Route {
 func loop(points ...fleet.Point) Route { return route(true, points...) }
 
 // errand is a delivery: out of the service area, along the corridor, and in through one
-// room's door. The dog-leg at the door is the point — a robot enters a room through its
-// doorway, not through the wall nearest the lift.
+// room's door. The dog-leg at the door matters: a robot enters a room through its doorway,
+// not through the wall nearest the lift.
 func errand(from fleet.Point, corridorY, doorX, roomY float64) Route {
 	return route(false,
 		from,
@@ -566,7 +566,7 @@ func errand(from fleet.Point, corridorY, doorX, roomY float64) Route {
 	)
 }
 
-// serpentine covers a rectangle in parallel passes — the boustrophedon path a floor scrubber
+// serpentine covers a rectangle in parallel passes, the boustrophedon path a floor scrubber
 // drives, turning at the end of each lane into the next one.
 func serpentine(x0, y0, x1, y1 float64, lanes int) Route {
 	points := make([]fleet.Point, 0, lanes*2)

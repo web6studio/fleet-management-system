@@ -10,7 +10,7 @@ import "./fleet.css";
 
 export interface FleetRegistryProps {
   site: Site;
-  /** Already ordered by triage — most urgent first. */
+  /** Already ordered by triage, most urgent first. */
   units: readonly UnitView[];
   bucket: Bucket | null;
   floorFilter: string | null;

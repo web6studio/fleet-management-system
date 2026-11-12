@@ -14,7 +14,7 @@ const CELL_WIDTH = 10.4;
  * Charge as a level and a number.
  *
  * The glyph fills proportionally so the row can be scanned without reading digits, and the
- * band tint only appears below 30% — a wall of green pills would make the amber ones
+ * band tint only appears below 30%, because a wall of green pills would make the amber ones
  * invisible.
  */
 export function BatteryTag({ percent, stale }: BatteryTagProps) {

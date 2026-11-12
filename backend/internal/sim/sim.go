@@ -1,8 +1,8 @@
 // Package sim stands in for the robots.
 //
 // It is the one fake in the system, and it is fenced off behind this package so the seam is
-// obvious: everything downstream — the store, the versioning, the API, the stream — behaves
-// identically whether a frame came from here or from a robot on a floor.
+// obvious. Everything downstream of it (the store, the versioning, the API, the stream)
+// behaves identically whether a frame came from here or from a robot on a floor.
 package sim
 
 import (
@@ -150,9 +150,9 @@ func (w *World) placeUnits(built map[string]map[string]storey, outageSiteID stri
 // Units sharing a floor and a role take successive routes, so a storey does not open with
 // four robots on one doorway. Where they start depends on whether they will ever move: an
 // active unit begins at the top of its route and spreads out as it drives, while one that
-// is parked, broken or silent is placed at the far end — which is both where an interrupted
-// job actually leaves a robot and, counting backwards per unit, what keeps two dead
-// scrubbers off the same pixel.
+// is parked, broken or silent is placed at the far end. That is where an interrupted job
+// actually leaves a robot, and counting backwards per unit keeps two dead scrubbers off the
+// same pixel.
 func pickRoute(
 	built map[string]map[string]storey,
 	s seed,
@@ -199,9 +199,9 @@ type mover struct {
 //
 // Units follow the routes their buildings define: a delivery runs from the service lift to
 // one room's door and back, a scrubber covers open floor in parallel passes, an assistant
-// walks a circuit. That is not navigation and does not pretend to be — nothing here plans a
-// path or avoids anything — but it is the shape of the work, which is what makes a trail on
-// the map worth reading.
+// walks a circuit. None of this is navigation: nothing here plans a path or avoids
+// anything. It is the shape of the work, which is what makes a trail on the map worth
+// reading.
 type Simulator struct {
 	store    *fleet.Store
 	interval time.Duration
@@ -335,9 +335,8 @@ func (m *mover) face() {
 
 // mark records where the unit is now, dropping the oldest sample once the trail is full.
 //
-// Samples are rounded to whole plan units — 5 cm, far finer than anything the map can draw —
-// because the trail is the bulk of every telemetry frame and full float precision spends
-// bandwidth on digits nobody can see.
+// Samples are rounded to whole plan units, which is 5 cm and far finer than anything the
+// map can draw. Full float precision would spend bandwidth on digits nobody can see.
 func (m *mover) mark() {
 	m.trail = append(m.trail, fleet.Point{
 		X: math.Round(m.unit.Pose.X),

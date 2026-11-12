@@ -200,8 +200,8 @@ describe("reconnecting", () => {
 // A socket the client has let go never writes into the screen.
 //
 // Prevents the subtlest failure here. A replaced socket can still be mid-delivery, and its
-// frames are older than what is already rendered — applying them would walk the dashboard
-// backwards with nothing on screen admitting it.
+// frames are older than what is already rendered. Applying them would walk the screen
+// backwards with nothing admitting it.
 describe("stale sockets", () => {
   it("ignores frames from a socket that has been replaced", () => {
     startStream();

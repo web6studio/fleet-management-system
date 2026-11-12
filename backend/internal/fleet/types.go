@@ -19,7 +19,7 @@ const (
 )
 
 // Health is a subsystem's condition. A subsystem the vendor never mentions is absent from
-// Subsystems entirely — a capability gap, never a fault.
+// Subsystems entirely. That is a capability gap, never a fault.
 type Health string
 
 const (
@@ -141,9 +141,9 @@ type Site struct {
 	Floors []string `json:"floors"`
 	// Plans is one plan per storey, keyed by floor id.
 	//
-	// Storeys of one building are not alike — a dock level is not a guest corridor — and
-	// drawing a single plan for all of them puts robots in rooms that do not exist on the
-	// floor being shown.
+	// Storeys of one building are not alike: a dock level is not a guest corridor. Drawing a
+	// single plan for all of them puts robots in rooms that do not exist on the floor being
+	// shown.
 	Plans map[string]FloorPlan `json:"plans"`
 }
 

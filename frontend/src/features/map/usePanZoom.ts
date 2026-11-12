@@ -31,7 +31,7 @@ export interface PanZoom {
  */
 export function usePanZoom(
   zoom: number,
-  /** Changes when the operator picks a different unit — not when that unit moves. */
+  /** Changes when the operator picks a different unit, not when that unit moves. */
   focusKey: string | null,
   focus: React.RefObject<PanFocus | null>,
 ): PanZoom {

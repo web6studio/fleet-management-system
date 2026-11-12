@@ -9,7 +9,7 @@ export interface StatusDiscProps {
   className?: string | undefined;
 }
 
-/** The solid carrier of a status colour — the only place a status hue appears at full strength. */
+/** The solid carrier of a status colour, and the only place a status hue appears at full strength. */
 export function StatusDisc({ tone, icon, size = 16, className }: StatusDiscProps) {
   return (
     <span

@@ -4,7 +4,7 @@ import type { Alarm, FacilityStop, FleetSnapshot, Site, Unit } from "../domain/t
  * The envelope of the API, as specified in `docs/api/openapi.yaml` and
  * `docs/api/websocket.md`.
  *
- * The entities themselves — `Unit`, `Alarm`, `Site` — are the domain types unchanged. Both
+ * The entities themselves (`Unit`, `Alarm`, `Site`) are the domain types unchanged. Both
  * ends of this contract are written together, and a mapping layer between two identical
  * shapes is ceremony that only ever drifts.
  */

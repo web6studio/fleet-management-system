@@ -1,5 +1,5 @@
 export interface MeterProps {
-  /** 0–1. Values outside the range are clamped rather than overflowing the track. */
+  /** 0-1. Values outside the range are clamped rather than overflowing the track. */
   value: number;
   /** Any CSS colour; callers pass a token so the palette stays in one file. */
   color?: string;
@@ -7,7 +7,7 @@ export interface MeterProps {
 }
 
 /**
- * A level bar — task progress, SLAM confidence.
+ * A level bar for task progress and SLAM confidence.
  *
  * Hidden from assistive technology on purpose: every bar in this product sits beside the
  * same figure written out as text, so announcing it twice would only add noise.

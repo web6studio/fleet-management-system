@@ -1,4 +1,4 @@
-# ADR 0001 — Ship a single Go binary with the frontend embedded
+# ADR 0001: Ship a single Go binary with the frontend embedded
 
 ## Context
 

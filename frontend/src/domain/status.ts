@@ -47,7 +47,7 @@ export const LOW_CONFIDENCE = 0.7;
 export interface FleetView {
   units: readonly UnitView[];
   byId: ReadonlyMap<string, UnitView>;
-  /** Sites where every unit went silent — one infrastructure fault, not N robot faults. */
+  /** Sites where every unit went silent: one infrastructure fault, not N robot faults. */
   darkSites: ReadonlySet<string>;
 }
 
@@ -66,7 +66,7 @@ export interface UnitView {
  * whatever the unit reports.
  *
  * A stop never outranks a fault. If it did, the attention counter could be zeroed by
- * pressing a button — the worst property an attention counter can have.
+ * pressing a button, which is the worst property an attention counter can have.
  */
 function deriveState(
   unit: Unit,
@@ -187,8 +187,8 @@ export function countNeedingAttention(views: readonly UnitView[]): number {
  * The floor to open a facility on.
  *
  * Whichever storey has the most units needing attention, then the busiest. Opening on a
- * fixed index — the top floor, or the one below it — regularly lands an operator on an empty
- * plan while the barometer beside it reports faults they cannot see.
+ * fixed index, such as the top floor, regularly lands an operator on an empty plan while
+ * the barometer beside it reports faults they cannot see.
  */
 export function floorToOpen(
   floors: readonly string[],

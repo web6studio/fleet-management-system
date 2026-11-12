@@ -1,4 +1,4 @@
-# ADR 0003 — WebSocket for telemetry, HTTP for commands
+# ADR 0003: WebSocket for telemetry, HTTP for commands
 
 ## Context
 

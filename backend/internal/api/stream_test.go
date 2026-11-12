@@ -174,7 +174,7 @@ func TestStreamDeltasCarryTheirPayload(t *testing.T) {
 // A client that missed a frame can ask for the whole fleet again.
 //
 // Prevents a dropped frame being permanent. Frames are dropped for a slow subscriber by
-// design, so the repair path is the other half of that decision — without it the screen
+// design, so the repair path is the other half of that decision. Without it the screen
 // stays wrong until the operator reloads.
 func TestStreamAnswersResync(t *testing.T) {
 	s := startStream(t)

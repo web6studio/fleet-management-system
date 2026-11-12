@@ -22,7 +22,7 @@ export const SEVERITY_MEANING: Record<Severity, string> = {
 /**
  * Unacknowledged first, then most severe, then newest.
  *
- * Acknowledged alarms stay in the list — acknowledging records ownership, not resolution,
+ * Acknowledged alarms stay in the list. Acknowledging records ownership, not resolution,
  * and hiding them would be the system claiming a condition cleared itself.
  */
 export function byTriage(a: Alarm, b: Alarm): number {

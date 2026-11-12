@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 /**
  * Automated accessibility checks against the shipped web UI.
  *
- * axe catches the mechanical half — contrast, names, roles, landmarks — which is the half
+ * axe catches the mechanical half: contrast, names, roles and landmarks, which is the part
  * that regresses silently when a class is renamed. The other half is below: whether the
  * screen can actually be operated from a keyboard, which no scanner can answer.
  */

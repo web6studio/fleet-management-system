@@ -16,8 +16,8 @@ import (
 //
 // The plan is walked rather than trusted: every route is sampled finely, and each time a
 // sample crosses from one enclosed space into another, a door has to be there. Circulation
-// space — corridors, which abut each other with nothing between them — is exempt, because
-// that is what makes it circulation space.
+// space is exempt: corridors abut each other with nothing between them, which is what makes
+// them circulation space.
 func TestRoutesOnlyCrossWallsAtDoors(t *testing.T) {
 	const step = 2.0
 
@@ -79,7 +79,7 @@ type space struct {
 
 // spaceAt is the enclosed space a point sits in: the last room or corridor drawn over it,
 // since later shapes are drawn on top. Slabs, walls, doors and floor markings are not
-// spaces — nothing is separated by them.
+// spaces, because nothing is separated by them.
 func spaceAt(plan fleet.FloorPlan, p fleet.Point) space {
 	found := space{index: -1}
 	for i, r := range plan.Rects {

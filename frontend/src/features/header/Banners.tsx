@@ -18,7 +18,7 @@ export interface BannersProps {
  * The two conditions that are about the building rather than about one unit.
  *
  * Both say the same thing in different directions: the fleet is not moving, and here is why
- * — so nobody spends the first minute of an incident working it out from the unit list.
+ * so nobody spends the first minute of an incident working it out from the unit list.
  */
 export function Banners({
   site,

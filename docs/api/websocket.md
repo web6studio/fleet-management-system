@@ -2,7 +2,7 @@
 
 `GET /api/v1/stream`
 
-Carries server-pushed state changes. Requests that need a response go over HTTP — see
+Carries server-pushed state changes. Requests that need a response go over HTTP. See
 [openapi.yaml](openapi.yaml) and
 [ADR 0003](../adr/0003-websocket-for-telemetry-http-for-commands.md).
 
@@ -26,7 +26,7 @@ server can add one without a client release.
 ### Trails
 
 Units in a `units` frame omit `trail`. A trail grows by one point per tick, so sending the
-whole history every second re-sends what the client already has — about 70% of the frame.
+whole history every second re-sends what the client already has, about 70% of the frame.
 
 The client reconstructs it: when a unit's pose changes, the position it just left becomes
 the newest trail point. A unit whose pose is unchanged keeps its trail, because the server

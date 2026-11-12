@@ -15,9 +15,8 @@ export interface FacilityTabsProps {
 /**
  * One flag per tab, worst condition first: unreachable, then faults, then nominal.
  *
- * The point is that an operator learns a facility is in trouble without opening it — and,
- * separately, never has to wonder why its units are standing still, which is what the
- * second orange flag answers.
+ * An operator learns a facility is in trouble without opening it, and never has to wonder
+ * why its units are standing still, which is what the second orange flag answers.
  */
 export function FacilityTabs({
   sites,

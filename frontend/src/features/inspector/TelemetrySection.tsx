@@ -6,7 +6,7 @@ import { formatHeading, formatMetres, formatSpeed } from "../../lib/format";
 
 export interface TelemetrySectionProps {
   unit: Unit;
-  /** The plan of the unit's own storey — each one has its own coordinate frame. */
+  /** The plan of the unit's own storey. Each has its own coordinate frame. */
   plan: FloorPlan | undefined;
 }
 

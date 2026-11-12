@@ -35,7 +35,7 @@ export function runtimeMinutes(unit: Unit, state: UnitState): number | null {
 /**
  * The sentence an operator actually needs: will this unit finish what it is doing?
  *
- * Only for a unit still working on a depleted battery — the one case where the percentage
+ * Only for a unit still working on a depleted battery, the one case where the percentage
  * alone does not answer the question being asked.
  */
 export function willItFinish(unit: Unit, state: UnitState): string | null {

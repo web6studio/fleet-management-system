@@ -8,7 +8,7 @@ export interface ToastProps {
  * Command feedback.
  *
  * `role="status"` so it is announced without stealing focus, and the wording is always
- * "sent", never "done" — the unit's next telemetry frame is what confirms a command.
+ * "sent", never "done": the unit's next telemetry frame is what confirms a command.
  */
 export function Toast({ message }: ToastProps) {
   if (!message) return null;

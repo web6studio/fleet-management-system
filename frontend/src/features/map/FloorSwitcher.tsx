@@ -11,7 +11,7 @@ export interface FloorSwitcherProps {
  * Floating floor control, highest storey at the top.
  *
  * Each row carries its unit count and a red dot when something on that floor needs
- * attention — which is why this is a stack of buttons and not a dropdown: it answers
+ * attention, which is why this is a stack of buttons and not a dropdown: it answers
  * "where is the fleet, and where is the trouble" before being opened.
  */
 export function FloorSwitcher({ floors, current, units, onSelect }: FloorSwitcherProps) {

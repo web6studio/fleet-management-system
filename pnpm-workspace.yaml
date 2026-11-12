@@ -1,5 +1,5 @@
 # Two packages, one lockfile: the web UI and the end-to-end suite that drives the shipped
-# binary. The suite is its own package because it belongs to neither half — it starts the Go
+# binary. The suite is its own package because it belongs to neither half: it starts the Go
 # server and talks to it through a browser.
 packages:
   - frontend

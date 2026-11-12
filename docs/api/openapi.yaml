@@ -9,7 +9,7 @@ info:
     Two channels, split by what the traffic is rather than by what the transport can do:
 
     - **HTTP**, described here: configuration that rarely changes, the bootstrap snapshot,
-      and commands. A command is a request with an answer — it wants a status code, an
+      and commands. A command is a request with an answer: it wants a status code, an
       idempotency key, an audit record and a rate limit, all of which HTTP and every gateway
       in front of it already provide.
     - **WebSocket** `/api/v1/stream`, described in `websocket.md`: everything that changes on
@@ -103,7 +103,7 @@ paths:
               schema: { $ref: "#/components/schemas/Problem" }
         "409":
           description: |
-            The command cannot be carried out in the unit's current state — resuming a unit
+            The command cannot be carried out in the unit's current state, such as resuming a unit
             that is not stopped, docking one already at a dock. The reason is in `detail`.
           content:
             application/problem+json:
@@ -117,7 +117,7 @@ paths:
         Scoped to one facility, every floor, regardless of what the caller is viewing.
 
         `PUT` rather than `POST`: the body states the desired state rather than an action, so
-        repeating the call is harmless — which matters for the one request on this API that
+        repeating the call is harmless, which matters for the one request on this API that
         a user may send twice under stress.
 
         A supervisory stop over the network. It is not a certified E-stop and it clears no
@@ -155,7 +155,7 @@ paths:
         Acknowledging records that an operator owns the alarm. It clears nothing: the
         condition stays true and the unit still needs attention.
 
-        Ownership is first-writer-wins — an alarm somebody already owns is left alone, so a
+        Ownership is first-writer-wins: an alarm somebody already owns is left alone, so a
         late click cannot erase who actually took it. The response says how many changed.
       requestBody:
         required: true
@@ -246,7 +246,7 @@ components:
         name: { type: string }
         floors:
           type: array
-          description: Highest storey first — the order a building is read in.
+          description: Highest storey first, the order a building is read in.
           items: { type: string }
         plans:
           type: object
@@ -281,7 +281,7 @@ components:
               rx: { type: number }
         paths:
           type: array
-          description: SVG path data for stroked details — lift shafts, service rooms.
+          description: SVG path data for stroked details such as lift shafts and service rooms.
           items: { type: string }
         labels:
           type: array
@@ -333,7 +333,7 @@ components:
         state:
           type: string
           description: |
-            What the vendor reports. `stopped` and `estop` are never reported — they are
+            What the vendor reports. `stopped` and `estop` are never reported. They are
             things an operator did, and the client folds them in.
           enum: [active, idle, charging, error, offline]
         activity:
@@ -370,7 +370,7 @@ components:
         kind: { type: string, example: Not moving }
         unitId:
           type: [string, "null"]
-          description: Null for facility-wide alarms — the point of those is that they are one fault, not N.
+          description: Null for facility-wide alarms, which are one fault rather than one per unit.
         detail: { type: string }
         acknowledgedBy:
           type: [string, "null"]

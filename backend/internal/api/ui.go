@@ -11,7 +11,7 @@ import (
 //
 // One artifact is the whole deployment argument (ADR 0001): copy a binary, run it, done.
 // It also makes the browser's origin the server's own, which is why the stream's origin
-// check needs no extra host in production — same-origin is always allowed.
+// check needs no extra host in production: same-origin is always allowed.
 
 // unbuiltPage is served when the binary was built without the web UI. It is a real page
 // rather than a 404, because the person seeing it is a developer who needs to be told which
@@ -53,7 +53,7 @@ func uiHandler(fsys fs.FS) http.Handler {
 			return
 		}
 
-		// A real file outside /assets — favicon, robots.txt, a manifest. Short cache: these
+		// A real file outside /assets, such as a favicon or robots.txt. Short cache: these
 		// keep their names across releases, so they have to be revalidated eventually.
 		if name != "index.html" && exists(fsys, name) {
 			w.Header().Set("Cache-Control", "public, max-age=3600")

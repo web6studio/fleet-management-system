@@ -1,4 +1,4 @@
-# ADR 0004 — Separate server state from view state
+# ADR 0004: Separate server state from view state
 
 ## Context
 
@@ -12,7 +12,7 @@ state and UI state being written by the same code.
 and status text for each unit. All three columns render that result.
 
 **Server state lives in the query cache** and is written only by the stream client. View
-state — selection, filters, zoom, theme, pending confirmations — lives in a reducer. The two
+state (selection, filters, zoom, theme, pending confirmations) lives in a reducer. The two
 do not overlap.
 
 **No optimistic updates.** A command is accepted, not applied; the screen changes when the

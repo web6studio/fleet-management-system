@@ -1,6 +1,6 @@
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** "2m 14s" — how an operator says an age out loud. */
+/** "2m 14s", the way an operator says an age out loud. */
 export function formatDuration(seconds: number): string {
   const whole = Math.max(0, Math.floor(seconds));
   return `${Math.floor(whole / 60)}m ${pad(whole % 60)}s`;
@@ -16,7 +16,7 @@ export function formatMetres(value: number): string {
   return `${value.toFixed(2)} m`;
 }
 
-/** Heading in degrees clockwise from north-up, normalised to 0–359. */
+/** Heading in degrees clockwise from north-up, normalised to 0-359. */
 export function formatHeading(radians: number): string {
   const degrees = Math.round(((radians * 180) / Math.PI) % 360);
   return `${(degrees + 360) % 360}°`;

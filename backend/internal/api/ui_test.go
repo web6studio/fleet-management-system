@@ -39,8 +39,8 @@ func get(t *testing.T, h http.Handler, path string) *httptest.ResponseRecorder {
 // re-downloaded without reason.
 //
 // Prevents the two halves of the same mistake. Cache the shell and a deployed release keeps
-// loading the previous bundle until somebody force-refreshes — a bug that reaches every
-// operator at once and looks like the deploy failed. Fail to cache the hashed assets and
+// loading the previous bundle until somebody force-refreshes. That reaches every operator
+// at once and looks like the deploy failed. Fail to cache the hashed assets and
 // every page load pulls 300 kB that provably cannot have changed, because the content hash
 // is in the file name.
 func TestConsoleCachePolicy(t *testing.T) {
@@ -86,8 +86,8 @@ func TestUnknownPathServesTheShell(t *testing.T) {
 // A mistyped endpoint answers as an API, not as a web page.
 //
 // Prevents the console swallowing API 404s. With a catch-all serving the shell, a wrong path
-// answers `200 text/html`, the client reports a JSON parse error, and the actual problem —
-// a route that does not exist — is invisible in the message.
+// answers `200 text/html`, the client reports a JSON parse error, and the actual problem,
+// a route that does not exist, is invisible in the message.
 func TestUnknownAPIPathIsAProblemNotAPage(t *testing.T) {
 	rec := get(t, uiServer(t, built()), "/api/v1/nonsense")
 

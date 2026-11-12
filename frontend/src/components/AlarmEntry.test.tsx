@@ -54,7 +54,7 @@ it("backs out without taking it", async () => {
 // An alarm somebody owns names them, and cannot be taken again.
 //
 // Ownership is the record of who responded. Offering the button again invites a second
-// operator to overwrite it — and the server would refuse, which reads on screen as the
+// operator to overwrite it, and the server would refuse, which reads on screen as the
 // acknowledgement having failed.
 it("names the owner and offers no way to re-take it", () => {
   renderEntry({ alarm: makeAlarm(12, { acknowledgedBy: "M. Weber" }) });

@@ -18,7 +18,7 @@ function ends(segment: TrailSegment): { first: string; last: string } {
 //
 // Prevents the defect the fade introduces and nothing else would catch: the path is cut into
 // segments so each can carry its own opacity, and an off-by-one in the cut leaves gaps every
-// few samples. On screen that is not an obvious bug — it reads as a dotted line, which is
+// few samples. On screen that is not an obvious bug: it reads as a dotted line, which is
 // exactly what an unselected trail already looks like.
 describe("trailSegments", () => {
   it("hands each piece on to the next at the same point", () => {

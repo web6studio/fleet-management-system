@@ -45,7 +45,7 @@ function snapshot(units: Unit[], overrides: Partial<FleetSnapshot> = {}): FleetS
 // The four barometer counters always add up to the fleet.
 //
 // Prevents the defect that makes a status summary worse than no summary. Seven states
-// collapse into four counters, and if any state landed in two buckets — or in none — the
+// collapse into four counters, and if any state landed in two buckets, or in none, the
 // tiles would describe a different number of units than exist.
 it("partitions every unit into exactly one bucket", () => {
   const units = [
@@ -67,7 +67,7 @@ it("partitions every unit into exactly one bucket", () => {
 //
 // Prevents the worst possible property of an attention counter: that it can be cleared by
 // pressing a button. Stopping a facility changes what its units are doing, not what is
-// wrong with them — a fault stays a fault and a flat battery keeps draining.
+// wrong with them. A fault stays a fault and a flat battery keeps draining.
 it("keeps faults and flat batteries in attention while the facility is stopped", () => {
   const units = [
     unit("FAULT", { state: "error" }),
@@ -161,7 +161,7 @@ describe("byTriage", () => {
 
 describe("floorToOpen", () => {
   // Prevents landing an operator on an empty plan while the barometer beside it reports
-  // faults they cannot see. A fixed index — top floor, or the one below — does exactly that
+  // faults they cannot see. A fixed index, such as the top floor, does exactly that
   // whenever the trouble happens to be somewhere else.
   it("opens on the floor with the most units needing attention", () => {
     const fleet = deriveFleet(

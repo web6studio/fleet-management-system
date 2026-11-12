@@ -20,7 +20,7 @@ export interface FloorPlanPanelProps {
   zoom: number;
   selectedUnitId: string | null;
   connection: ConnectionState;
-  /** Every unit here has gone silent — markers are last-known positions. */
+  /** Every unit here has gone silent, so markers are last-known positions. */
   dark: boolean;
   stopped: boolean;
   silentFor: number;
