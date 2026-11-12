@@ -1,0 +1,293 @@
+/* ── barometer ────────────────────────────────────────────────────────────── */
+.barometer {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 0 12px;
+}
+
+.barometer-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 9px 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-tile);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.barometer-tile {
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+.barometer-tile:hover {
+  background: var(--hover);
+}
+
+.barometer-tile[aria-pressed="true"] {
+  background: var(--raised);
+  border-color: var(--line2);
+  box-shadow: inset 0 -3px 0 var(--bucket-color);
+}
+
+.barometer-count {
+  font-size: var(--text-num);
+  font-weight: 500;
+  line-height: 1.05;
+  color: var(--fg);
+}
+
+.barometer-count.is-zero {
+  color: var(--fg3);
+}
+
+.barometer-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--fg2);
+}
+
+.barometer-swatch {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: var(--radius-pill);
+  background: var(--bucket-color);
+}
+
+/* One hue per bucket, set once and read by both the tile and the composition bar. */
+.bucket-attention {
+  --bucket-color: var(--st-error);
+}
+.bucket-active {
+  --bucket-color: var(--st-active);
+}
+.bucket-standby {
+  --bucket-color: var(--st-idle);
+}
+.bucket-offline {
+  --bucket-color: var(--st-offline);
+}
+
+.composition {
+  display: flex;
+  gap: 2px;
+  height: 4px;
+  margin: 10px 12px 0;
+}
+
+.composition-part {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bucket-color);
+  transition: width var(--dur-slow) var(--ease);
+}
+
+/* ── filters ──────────────────────────────────────────────────────────────── */
+.registry-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.search {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  color: var(--fg3);
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  height: var(--control-h);
+  padding: 0 10px 0 32px;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-control);
+  background: var(--canvas);
+  color: var(--fg);
+  font-size: var(--text-md);
+}
+
+.search input::placeholder {
+  color: var(--fg3);
+}
+
+.floor-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.registry-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--text-sm);
+  color: var(--fg3);
+}
+
+.registry-clear {
+  margin-left: auto;
+  color: var(--fg2);
+  font-size: var(--text-sm);
+  font-weight: 400;
+}
+
+.registry-list {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.registry-empty {
+  padding: 24px 16px;
+  color: var(--fg3);
+  font-size: 12.5px;
+}
+
+/* ── unit row ─────────────────────────────────────────────────────────────── */
+.unit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  padding: 11px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  text-align: left;
+  cursor: pointer;
+}
+
+.unit-row {
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+.unit-row:hover {
+  background: var(--hover);
+}
+
+.unit-row-selected {
+  background: var(--raised);
+  box-shadow:
+    inset 0 0 0 1px var(--line2),
+    inset 3px 0 0 var(--fg);
+}
+
+.unit-row-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.unit-row-id {
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.unit-row-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--fg3);
+}
+
+.unit-row-state {
+  flex: none;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  color: var(--fg2);
+}
+
+.unit-row-state-alarm {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.unit-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding-left: 24px;
+}
+
+.unit-row-where {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 8px;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  color: var(--fg2);
+  white-space: nowrap;
+}
+
+/* Dashed, because "no position" is a permanent property of the vendor, not a fault. */
+.unit-row-where-nopos {
+  border-style: dashed;
+}
+
+/* A step down in ink rather than in opacity: opacity dims text past AA contrast, and this
+   label still has to be readable to say which floor the unit is actually on. */
+.unit-row-where-elsewhere {
+  color: var(--fg3);
+}
+
+/* ── battery tag ──────────────────────────────────────────────────────────── */
+.battery-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  height: 20px;
+  padding: 0 8px 0 6px;
+  border: 1px solid var(--line2);
+  border-radius: var(--radius-pill);
+  color: var(--fg2);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.battery-tag-fill {
+  fill: currentColor;
+}
+
+.battery-tag-banded {
+  background: rgba(var(--tone-rgb), 0.16);
+  border-color: rgba(var(--tone-rgb), 0.55);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.battery-tag-banded .battery-tag-fill {
+  fill: var(--tone);
+}
+
+.battery-tag-stale {
+  border-color: var(--line);
+  color: var(--fg3);
+}

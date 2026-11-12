@@ -1,0 +1,131 @@
+.app {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 760px;
+  overflow: hidden;
+  background: var(--canvas);
+  color: var(--fg);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr) 392px;
+  gap: var(--gap);
+  padding: var(--gap);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Every column scrolls inside itself; the page never does. An operator who has to scroll
+   the page to reach the alarm list is being asked to remember where it was. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+}
+
+/* The right column swaps between alarms, a unit and a confirmation. A short fade reads as
+   one panel changing its contents rather than three panels flickering past. */
+.inspector > * {
+  animation: panel-in var(--dur-slow) var(--ease);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  padding: 14px 16px 12px;
+}
+
+.panel-head h2 {
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.panel-subtitle {
+  font-size: var(--text-sm);
+  color: var(--fg3);
+}
+
+.panel-head-end {
+  margin-left: auto;
+}
+
+.registry /* The right column swaps between alarms, a unit and a confirmation. A short fade reads as
+   one panel changing its contents rather than three panels flickering past. */
+.inspector > * {
+  animation: panel-in var(--dur-slow) var(--ease);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.panel-head {
+  align-items: baseline;
+}
+
+.inspector /* The right column swaps between alarms, a unit and a confirmation. A short fade reads as
+   one panel changing its contents rather than three panels flickering past. */
+.inspector > * {
+  animation: panel-in var(--dur-slow) var(--ease);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.panel-head {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Below this the three columns stop being columns: a 340px registry squeezed to 180px is a
+   list of truncated ids. Stacking them, and letting the page scroll, is the honest fallback. */
+@media (max-width: 1100px) {
+  .app {
+    height: auto;
+    overflow: visible;
+  }
+
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .scroll-area {
+    max-height: 520px;
+  }
+}
+
+/* The two states before there is a fleet to draw. Skeleton panels would imply one exists
+   and is merely late; a sentence says what is actually happening. */
+.app-startup {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  min-height: 100vh;
+  padding: 24px;
+  text-align: center;
+  color: var(--fg2);
+}
+
+.app-startup strong {
+  color: var(--fg);
+}
