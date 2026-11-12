@@ -12,7 +12,7 @@ COPY frontend/ frontend/
 COPY scripts/ scripts/
 RUN pnpm --dir frontend build && node scripts/stage-console.mjs
 
-FROM golang:1.25-alpine AS server
+FROM golang:1.27-alpine AS server
 WORKDIR /src
 COPY backend/go.mod backend/go.sum ./backend/
 RUN cd backend && go mod download

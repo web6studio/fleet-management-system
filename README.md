@@ -22,7 +22,7 @@ A light theme is available. Status colours are the same in both themes.
 
 ## Requirements
 
-- Go 1.25+
+- Go 1.27+
 - Node 22+ and pnpm 10+
 
 ## Build and run
