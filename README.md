@@ -113,6 +113,54 @@ pnpm run test:e2e   # Playwright; requires pnpm run build first
 
 100 frontend unit tests, 45 backend tests, 13 end-to-end tests.
 
+## Scope
+
+### What I built, and why
+
+All three parts: simulator, server and UI. The UI is where most of the time went, but a
+fleet view on hard-coded fixtures would not have shown the part I think is actually hard
+here, which is what happens between a telemetry frame arriving and an operator deciding to
+act. That logic needs a real server, a real transport and a real failure mode.
+
+The product question I answered: an operator supervising robots across buildings needs to
+know what needs them now, whether the screen can be trusted, what happened to one unit, and
+where it is. The three columns are those questions in priority order.
+
+### What I faked, and why that was the right trade
+
+**The robots.** `internal/sim` produces telemetry and calls the same store method a real
+ingest path would. Everything downstream runs on real code: versioning, gap detection,
+command validation, the stream, the whole UI. Faking further up would have cost the parts
+worth showing; faking lower down would have meant a broker and a second deployable for a
+seam that is one function call wide.
+
+**Alarms.** Seeded rather than derived. Deriving them means a server-side timer watching for
+readings that do *not* arrive, which is a day of work on its own and would have come out of
+the UI budget.
+
+**Floor plans.** Hand-authored vector geometry rather than the occupancy grids a real fleet
+produces from SLAM. The coordinate frame is the same, so the rendering layer swaps without
+touching the markers.
+
+**Persistence and auth.** Left out entirely. Both are well-understood plumbing that would
+have consumed time without demonstrating anything.
+
+### What I would do differently in production
+
+- **Derive alarms from telemetry** instead of seeding them. This is the one piece of
+  business logic that is currently narrated rather than computed.
+- **Replace the simulator with a real ingest path**, with batching, producer validation and
+  per-unit rate limiting.
+- **Add persistence.** A time-series store behind the existing store interface would make
+  history and audit possible.
+- **Push binary frames for pose.** At 1 Hz and this fleet size JSON is fine; at 10 to 30 Hz
+  across thousands of units it is not.
+- **Add the authorisation seam**: a principal on the handler and a site filter on stream
+  subscribe.
+- **Interaction coverage for the remaining components.** The domain and transport layers are
+  well covered; the component tests cover the panels that carry the invariants, not all of
+  them.
+
 ## Limitations
 
 Telemetry is simulated. See [docs/simulation.md](docs/simulation.md) for what is simulated
