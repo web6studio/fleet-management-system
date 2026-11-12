@@ -157,6 +157,10 @@ have consumed time without demonstrating anything.
   across thousands of units it is not.
 - **Add the authorisation seam**: a principal on the handler and a site filter on stream
   subscribe.
+- **A tablet layout.** Supervisors walk the building with a tablet, so this is the one
+  missing viewport with a real user behind it. The three columns would collapse to two,
+  with the inspector as an overlay. A phone layout matters less: triage and the map need
+  the width.
 - **Interaction coverage for the remaining components.** The domain and transport layers are
   well covered; the component tests cover the panels that carry the invariants, not all of
   them.
@@ -177,6 +181,8 @@ Not implemented:
 - **Horizontal scaling.** Single instance. Multiple instances require a message bus and a
   replay buffer keyed by version.
 - **Observability.** No metrics or tracing.
+- **Tablet and phone layouts.** The grid is built for a desktop viewport and does not
+  reflow below it.
 
 ## Licence
 
